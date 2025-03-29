@@ -1,14 +1,28 @@
 import express from 'express';
+import cors from 'cors'
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.routes.js';
+
+dotenv.config();
 
 const app = express();
 
 const port = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-  // req: request object (contains information about the incoming request)
-  // res: response object (used to send a response back to the client)
-  res.send('Hello World from Express!'); // Send a simple text response
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/auth', authRoutes);
+
+
+app.use((err, req, res, next) => {
+  console.error("Global Error Handler:", err.stack || err); 
+  const statusCode = err.statusCode || 500; 
+  const message = err.message || 'Internal Server Error';
+  res.status(statusCode).json({ error: message });
 });
+
 
 app.listen(port, () => {
   console.log(`Express server listening at http://localhost:${port}`);

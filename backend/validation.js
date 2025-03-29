@@ -62,7 +62,7 @@ const exportedMethods = {
     return riskTolerance;
   },
 
-  TODO, //email validation
+  //TODO, //email validation
   checkEmail(email){},
 
   checkPercentage(percentage) {
