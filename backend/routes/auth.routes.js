@@ -1,5 +1,5 @@
 import express from 'express';
-import { signUpUser, loginUser, deleteUser} from '../data/users.js';
+import { signUpUser, loginUser, removeUser} from '../data/users.js';
 import { checkAuth } from '../middleware/auth.middleware.js';
 import validation from '../validation.js';
 
@@ -66,9 +66,11 @@ router.delete('/delete/:id', checkAuth, async (req, res) => {
         if (requestingUser !== id) {
             return res.status(403).json({ error: 'Forbidden: You can only delete your own account' });
         }
-        const user = await deleteUser(id);
+        const user = await removeUser(id);
         return res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
+export default router;
