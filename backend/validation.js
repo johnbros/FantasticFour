@@ -32,8 +32,7 @@ const exportedMethods = {
     return id;
   },
 
-  checkName(strVal) {
-    const varName = "Name";
+  checkName(strVal, valName) {
     strVal = this.checkString(strVal, varName);
     if (strVal.length < 5 || strVal.length > 25)
       throw `the ${varName} ${strVal} is not between 5 and 25 characters`;
@@ -62,7 +61,7 @@ const exportedMethods = {
       throw `Risk tolerance is not between 1 and 5`;
     return riskTolerance;
   },
-  
+
   TODO, //email validation
   checkEmail(email){},
 

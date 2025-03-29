@@ -11,11 +11,11 @@ const exportedMethods = {
         return subInvestment;
     },
 
-
     // Add a sub investment
-    async addSubInvestment(investmentId, subInvestmentName, totalValue) {
-        investmentId = validation.checkId(investmentId);
-        totalValue = validation.checkNum(totalValue);
+    async addSubInvestment(investmentId, name, value) {
+        investmentId = validation.checkId(investmentId, "subInvestmentId");
+        name = validation.checkString(name, "Subinvestment name");
+        value = validation.checkNum(value, "Subinvestment value");
 
         const subInvestmentCollection = await subInvestments();
         const investmentCollection = await investments();
@@ -25,9 +25,9 @@ const exportedMethods = {
         if (investmentPercentage > 100) throw "Investment percentage cannot exceed 100%";
 
         const newSubInvestment = {
-            investmentId,
-            totalValue,
-            subInvestmentName,
+            investmentId: ObjectId(investmentId),
+            name,
+            value,
             investmentPercentage,
             dateInvested: new Date(),
         };
@@ -35,10 +35,9 @@ const exportedMethods = {
         const insertInfo = await subInvestmentCollection.insertOne(newSubInvestment);
         if (insertInfo.insertedCount === 0) throw "Could not add sub-investment";
 
-        const updatedInvestment = await investmentCollection.findOneAndUpdate(
-            { _id: ObjectId(investmentId) },
-            { $push: { subInvestments: investmentsInfo.add(insertInfo.insertedId) } },
-            { returnDocument: "after" }
+        const updatedInvestment = await investmentCollection.updateOne(
+            { _id: new ObjectId(investmentId) },
+            { $addToSet: { subInvestments: insertInfo.insertedId } },
         );
         if (!updatedInvestment) throw "Could not update investment with sub-investment";
 
