@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
-import { investments } from "../config/mongoCollections";
+import { investments, subInvestments } from "../config/mongoCollections";
+import { get } from "http";
 
 const exportedMethods = {
   async getInvestmentById(id) {
@@ -12,11 +13,7 @@ const exportedMethods = {
     return investment;
   },
 
-  async addInvestment(
-    userId,
-    investmentType,
-    dateInvested
-  ) {
+  async addInvestment(userId, investmentType, dateInvested) {
     userId = validation.checkId(userId);
     investmentType = validation.checkString(investmentType);
     // totalValue = validation.checkNum(totalValue);
@@ -54,11 +51,10 @@ const exportedMethods = {
     //   updatedInvestmentData.totalValue = validation.checkNum(
     //     updatedInvestment.totalValue
     //   );
-    if (updatedInvestment.dateInvested)
-        TODO; //implement checkDateInvested in validation.js
-      updatedInvestmentData.dateInvested = validation.checkDateInvested(
-        updatedInvestment.dateInvested
-      );
+    if (updatedInvestment.dateInvested) TODO; //implement checkDateInvested in validation.js
+    updatedInvestmentData.dateInvested = validation.checkDateInvested(
+      updatedInvestment.dateInvested
+    );
 
     const investmentCollection = await investments();
     let newInvestment = await investmentCollection.findOneAndUpdate(
@@ -75,7 +71,29 @@ const exportedMethods = {
       _id: new ObjectId(id),
     });
     if (!deletionInfo) throw `Could not delete post with id of ${id}`;
+    deletionInfo.subInvestments.forEach((subInvestmentId) => {
+      subInvestmentData.removeSubInvestment(subInvestmentId);
+    });
     return { ...deletionInfo, deleted: true };
+  },
+
+  async totalSubInvestment(investmentId) {
+    investmentId = validation.checkId(investmentId, "investment Id");
+    const investmentCollection = await investments();
+    const investment = await investmentCollection.findOne({
+      _id: new ObjectId(investmentId),
+    });
+    if (!investment) throw "Investment not found";
+    const subInvestmentCollection = await subInvestments();
+    let totalValue = 0;
+    for (const subInvestmentId of investment.subInvestments) {
+      const subInvestment = await subInvestmentCollection.findOne({
+        _id: new ObjectId(subInvestmentId),
+      });
+      if (!subInvestment) throw "Sub investment not found";
+      totalValue += subInvestment.value;
+    }
+    return totalValue;
   },
 };
 

@@ -7,13 +7,15 @@ const exportedMethods = {
         id = validation.checkId(id);
         const subInvestmentCollection = await subInvestments();
         const subInvestment = await subInvestmentCollection.findOne({ _id: ObjectId(id) });
-        if (!subInvestment) throw "Sub-investment not found";
+        if (!subInvestment) throw "Sub investment not found";
         return subInvestment;
     },
 
+   
+
     // Add a sub investment
     async addSubInvestment(investmentId, name, value) {
-        investmentId = validation.checkId(investmentId, "subInvestmentId");
+        investmentId = validation.checkId(investmentId, "subInvestment Id");
         name = validation.checkString(name, "Subinvestment name");
         value = validation.checkNum(value, "Subinvestment value");
 
@@ -51,7 +53,12 @@ const exportedMethods = {
           });
           if (!deletionInfo) throw `Could not delete post with id of ${id}`;
           return { ...deletionInfo, deleted: true };
-    }
+    },
+
+    
+
+
+
 };
 
 export default exportedMethods;
