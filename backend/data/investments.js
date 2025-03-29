@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
-import { subInvestments } from "../config/mongoCollections";
+import { investments } from "../config/mongoCollections";
 
 const exportedMethods = {
   async getInvestmentById(id) {
-    id = validation.checkId(id);
+    id = validation.checkId(id, "Investment Id");
     const investmentCollection = await investments();
     const investment = await investmentCollection.findOne({
       _id: ObjectId(id),
@@ -15,25 +15,20 @@ const exportedMethods = {
   async addInvestment(
     userId,
     investmentType,
-    investmentName,
-    totalValue,
-    investmentPercentage,
     dateInvested
   ) {
     userId = validation.checkId(userId);
     investmentType = validation.checkString(investmentType);
-    investmentName = validation.checkString(investmentName);
-    totalValue = validation.checkNum(totalValue);
-    TODO; //calculate investmentPercentage based on totalValue and investmentType
-    investmentPercentage = validation.checkPercentage(investmentPercentage);
+    // totalValue = validation.checkNum(totalValue);
+    // TODO; //calculate investmentPercentage based on totalValue and investmentType
+    // investmentPercentage = validation.checkPercentage(investmentPercentage);
     TODO; // dateInvested = validation.checkDateInvested(dateInvested)
 
     const newInvestment = {
       userId,
       investmentType,
-      investmentName,
-      totalValue,
-      investmentPercentage,
+      totalValue: 0,
+      investmentPercentage: 0,
       dateInvested: new Date(),
       subInvestments: [],
     };
@@ -55,14 +50,15 @@ const exportedMethods = {
       updatedInvestmentData.investmentType = validation.checkString(
         updatedInvestment.investmentType
       );
-    if (updatedInvestment.totalValue)
-      updatedInvestmentData.totalValue = validation.checkNum(
-        updatedInvestment.totalValue
-      );
-    // if (updatedInvestment.dateInvested)
-    //   updatedInvestmentData.dateInvested = validation.checkDateInvested(
-    //     updatedInvestment.dateInvested
+    // if (updatedInvestment.totalValue)
+    //   updatedInvestmentData.totalValue = validation.checkNum(
+    //     updatedInvestment.totalValue
     //   );
+    if (updatedInvestment.dateInvested)
+        TODO; //implement checkDateInvested in validation.js
+      updatedInvestmentData.dateInvested = validation.checkDateInvested(
+        updatedInvestment.dateInvested
+      );
 
     const investmentCollection = await investments();
     let newInvestment = await investmentCollection.findOneAndUpdate(
