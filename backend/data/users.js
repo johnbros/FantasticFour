@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken';
 import validation from "../validation.js";
 
 const saltRounds = 11;
@@ -62,19 +63,27 @@ const exportedMethods = {
         const userCollection = await users();
         const user = await userCollection.findOne({ email });
 
-        if (user === null) throw "Either the username or password is invalid";
+        if (!user) throw "Either the username or password is invalid";
         let match = await bcrypt.compare(password, user.password);
         if (!match) throw "Either the username or password is invalid";
 
-        const result = {
+        const payload = {
             _id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
             userFinancialId: user.userFinancialId,
             createdAt: user.createdAt,  
+        }
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: '1h'
+        });
+
+        return {
+            message: 'Login successful!',
+            token: token,
+            payload: payload,
         };
-        return result;
     },
 
     async removeUser(id){
