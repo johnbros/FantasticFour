@@ -9,13 +9,13 @@ const exportedMethods = {
         const userCollection = await users();
         const user = await userCollection.findOne({ _id: ObjectId(id) });
         if (!user) throw "User not found";
+        TODO //make sure to remove password from user object before returning it
         return user;    
     },
 
     async addUser(firstName, lastName, email, password){
-
-        firstName = validation.checkString(firstName, "firstName");
-        lastName = validation.checkString(lastName, "lastName");
+        firstName = validation.checkName(firstName, "firstName");
+        lastName = validation.checkName(lastName, "lastName");
         password = validation.checkPassword(password);
         const userCollection = await users();
         const hash = await bcrypt.hash(password, 16);
