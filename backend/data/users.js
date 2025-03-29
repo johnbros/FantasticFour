@@ -3,6 +3,8 @@ import { users } from "../config/mongoCollections.js";
 import bcrypt from "bcryptjs";
 import validation from "../validation.js";
 
+const saltRounds = 11;
+
 const exportedMethods = {
     async getUserById(id){
         id = validation.checkId(id);
@@ -18,7 +20,7 @@ const exportedMethods = {
         lastName = validation.checkName(lastName, "lastName");
         password = validation.checkPassword(password);
         const userCollection = await users();
-        const hash = await bcrypt.hash(password, 16);
+        const hash = await bcrypt.hash(password, saltRounds);
 
         const newUser = {
             firstName,
@@ -29,10 +31,17 @@ const exportedMethods = {
         };
         
         const insertInfo = await userCollection.insertOne(newUser);
-        if (insertInfo.insertedCount === 0) throw "Could not add user";
-        return await this.getUserById(insertInfo.insertedId.toString());
+        if (!insertInfo.acknowledged || !insertInfo.insertedId)
+            throw "Could not add user";
+        const result = {
+            _id: insertInfo.insertedId,
+            firstName,
+            lastName,
+            email,
+            createdAt: new Date(),
+        };
+        return result;
     },
-
 
     async removeUser(id){
         const userCollection = await users();
@@ -42,7 +51,6 @@ const exportedMethods = {
           if (!deletionInfo) throw `Could not delete post with id of ${id}`;
           return { ...deletionInfo, deleted: true };
     }
-
 
 };
 

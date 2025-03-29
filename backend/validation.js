@@ -62,8 +62,10 @@ const exportedMethods = {
       throw `Risk tolerance is not between 1 and 5`;
     return riskTolerance;
   },
+  
   TODO, //email validation
   checkEmail(email){},
+
   checkPercentage(percentage) {
     percentage = this.checkNum(percentage, "Percentage");
     if (percentage < 0 || percentage > 100)
