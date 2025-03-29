@@ -1,20 +1,75 @@
 import React, { useState } from "react";
+import { isValidEmail, isValidPassword } from "../src/helpers/authHelpers";
+import './Login.css';
 
-export default function Login({ setCurrentPage }) {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    // Placeholder for authentication logic
-    setCurrentPage("dashboard");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      isValidEmail(email);
+      isValidPassword(password);
+      
+      // TODO: Implement login logic
+      console.log(email, password);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      setError(e.message);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="login-container">
+        <div className="login-form">
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="login-container">
-      <h1>Login</h1>
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
+      <div className="login-form">
+        <h1 className="login-title">Welcome Back</h1>
+        {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="login-button">
+            Log In
+          </button>
+        </form>
+        <div className="signup-link">
+          Don't have an account? <a href="/signup">Sign up</a>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default Login;
