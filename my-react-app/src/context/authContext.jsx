@@ -63,8 +63,6 @@ export const AuthProvider = ({ children }) => {
     logout,
   };
 
-  // Add a console log right before returning to ensure this point is reached
-  console.log("AuthProvider rendering with value:", value);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

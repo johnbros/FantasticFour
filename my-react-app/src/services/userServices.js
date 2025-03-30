@@ -43,4 +43,18 @@ export const fetchUserFinacials = async (financialId) => {
             console.error(`Error fetching user ${financialId} finacials:`, error);
             throw error;
         }
+}
+
+export const postFinancialPreferences = async (userId, financialData) => {
+    try {
+        const response = await axios.post(`${apiUrl}/api/users/${userId}/finacials`, financialData, { 
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error posting financial preferences for user ${userId}:`, error);
+        throw error;
     }
+}

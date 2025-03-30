@@ -58,17 +58,53 @@ router.get('/:id/finacials', checkAuth, async (req, res) => {
         return res.status(400).json({ error: error.message });
     }
     try {
-        userFinance = await userFinancials.userData.getUserFinancialsById(id);
+        userFinance = await userFinancials.getUserFinancialsById(id);
         if (!userFinance) {
             return res.status(404).json({ error: 'User financials not found' });
         }
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ error: error.message });
     }
     if (userFinance.userId !== loggedInUserId) {
         return res.status(403).json({ error: 'You are not authorized to access this users financials' });
     }
     
+    res.status(200).json(userFinance);
+    
+});
+
+router.post('/:id/finacials', checkAuth, async (req, res) => {
+    let { id } = req.params;
+    const loggedInUserId = req.userData.userId;
+    let userFinance = null;
+
+    if (!id) {
+        return res.status(400).json({ error: 'User ID is required' });
+    }
+    try {
+        id = validation.checkId(id, "User Id");
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+    try {
+        if(loggedInUserId !== id) {
+            return res.status(403).json({ error: 'You are not authorized to access this user' });
+        }
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+    try {
+        userFinance = await userFinancials.addUserFinancials(id, req.body.riskTolerance, req.body.investmentAmount);
+        if (!userFinance) {
+            return res.status(404).json({ error: 'User financials not found' });
+        }
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: error.message });
+    }
+
     res.status(200).json(userFinance);
     
 });

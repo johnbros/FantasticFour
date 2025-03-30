@@ -8,7 +8,7 @@ const exportedMethods = {
     async getUserFinancialsById(id) {
         id = validation.checkId(id);
         const userFinancialsCollection = await userFinancials();
-        const userFinance = await userFinancialsCollection.findOne({ _id: ObjectId(id) });
+        const userFinance = await userFinancialsCollection.findOne({ _id: new ObjectId(id) });
         if (!userFinance) throw "User financials not found";
         return userFinance;
     },
@@ -16,7 +16,7 @@ const exportedMethods = {
     async addUserFinancials(userId, riskTolerance, investmentAmount) {
         userId = validation.checkId(userId, "User Id");
         riskTolerance = validation.checkRiskTolerance(riskTolerance, "Risk Tolerance");
-        // investmentAmount = validation.checkNum(investmentAmount, "Investment Amount");
+        investmentAmount = validation.checkNum(investmentAmount, "Investment Amount");
 
         const user = await userData.getUserById(userId);
         if (!user) throw "User not found";
@@ -24,7 +24,7 @@ const exportedMethods = {
         const newUserFinancial = {
             userId,
             riskTolerance,
-            // investmentAmount,
+            investmentAmount,
             // portfolioValue: 0,
             investments: [],
         };
@@ -34,7 +34,7 @@ const exportedMethods = {
         const insertInfo = await userFinanceCollection.insertOne(newUserFinancial);
         const updatedUser = await userCollection.findOneAndUpdate(
             { _id: new ObjectId(userId) },
-            { $set: { userFinancialID: insertInfo.insertedId } },
+            { $set: { userFinancialId: insertInfo.insertedId } },
             { returnDocument: "after" }
         );
         if (!updatedUser) throw "Could not update user with financials";

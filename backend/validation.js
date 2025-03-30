@@ -57,7 +57,7 @@ const exportedMethods = {
   },
 
   checkRiskTolerance(riskTolerance) {
-    riskTolerance = checkNum(riskTolerance, "Risk Tolerance");
+    riskTolerance = this.checkNum(riskTolerance, "Risk Tolerance");
     if (riskTolerance < 1 || riskTolerance > 5)
       throw `Risk tolerance is not between 1 and 5`;
     return riskTolerance;

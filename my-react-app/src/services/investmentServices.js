@@ -16,3 +16,5 @@ export const fetchInvestment = async (investmentId) => {
         throw error;
     }
 }
+
+

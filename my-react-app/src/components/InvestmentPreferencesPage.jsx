@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/authContext'; 
+import { postFinancialPreferences, getId } from '../services/userServices';
 
 // --- Mock API Service Functions (Replace with actual service calls) ---
 // These should ideally live in src/services/preferenceService.js or userService.js
@@ -100,7 +101,8 @@ function InvestmentPreferencesPage() {
         investmentAmount: amountNum,
       };
       // --- Replace with actual API call ---
-      await saveUserPreferences(preferencesToSave);
+      const userId = await getId();
+      await postFinancialPreferences(userId, preferencesToSave);
       setSuccessMessage("Preferences saved successfully!");
 
     } catch (err) {
