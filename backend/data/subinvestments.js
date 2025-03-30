@@ -11,8 +11,6 @@ const exportedMethods = {
         return subInvestment;
     },
 
-   
-
     // Add a sub investment
     async addSubInvestment(investmentId, name, value) {
         investmentId = validation.checkId(investmentId, "subInvestment Id");
@@ -54,10 +52,6 @@ const exportedMethods = {
           if (!deletionInfo) throw `Could not delete post with id of ${id}`;
           return { ...deletionInfo, deleted: true };
     },
-
-    
-
-
 
 };
 

@@ -17,7 +17,7 @@ const exportedMethods = {
     async addUserFinancials(userId, riskTolerance, investmentAmount) {
         userId = validation.checkId(userId, "User Id");
         riskTolerance = validation.checkRiskTolerance(riskTolerance, "Risk Tolerance");
-        investmentAmount = validation.checkNum(investmentAmount, "Investment Amount");
+        // investmentAmount = validation.checkNum(investmentAmount, "Investment Amount");
 
         const user = await userData.getUserById(userId);
         if (!user) throw "User not found";
@@ -25,8 +25,8 @@ const exportedMethods = {
         const newUserFinancial = {
             userId,
             riskTolerance,
-            investmentAmount,
-            portfolioValue: 0,
+            // investmentAmount,
+            // portfolioValue: 0,
             investments: [],
         };
 
@@ -57,12 +57,14 @@ const exportedMethods = {
 
     async totalInvestment(userFinancialsId) {
         const userFinance = await this.getUserFinancialsById(userFinancialsId);
+        if (userFinance.investments.length === 0) return 0;
         const investmentCollection = await investments();
         let totalValue = 0;
         for (const investmentId of userFinance.investments) {
             const investment = await investmentCollection.findOne({ _id: new ObjectId(investmentId) });
             if (!investment) throw "Investment not found";
-            totalValue += investment.totalValue;
+            const value = await investmentData.totalSubInvestment(investmentId);
+            totalValue += value;
         }
         return totalValue;
     }
