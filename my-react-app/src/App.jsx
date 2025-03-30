@@ -13,6 +13,7 @@ import Profile from './components/profile.jsx'
 import { useAuth } from '../src/context/authContext.jsx'
 import Logout from './components/Logout.jsx'
 import Contact from './components/Contact.jsx'
+import Account from './components/Account.jsx'
 
 
 
@@ -41,6 +42,7 @@ function App() {
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/setup-financial-plan" element={<InvestmentPreferencesPage />} />
+                <Route path='/account' element={<Account />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

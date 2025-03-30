@@ -53,6 +53,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const deleteAccount = () => {
+    return new Promise((resolve, reject) => {
+      // You can replace the below logic with an actual API call to delete the user's account
+      try {
+        // Example of deleting account with API call:
+        // (Replace with your actual API logic)
+        setTimeout(() => {
+          // Simulate account deletion
+          console.log('Account deleted from backend');
+          
+          // Clear user data from localStorage and update state
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('authUser');
+          setAuthToken(null);
+          setUser(null);
+          
+          resolve(); // Resolve the promise after successful deletion
+        }, 2000);
+      } catch (error) {
+        reject('Error deleting account:', error);
+      }
+    });
+  };
+
   const isAuthenticated = !!authToken;
 
   const value = {
@@ -61,6 +85,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     login,
     logout,
+    deleteAccount
   };
 
 
