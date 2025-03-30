@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/authContext'; 
 import {fetchUser, getId, fetchUserFinacials} from '../services/userServices'; 
-import { fetchInvestment, createInvestment } from '../services/investmentServices';
+import { fetchInvestment, createInvestment, deleteInvestment } from '../services/investmentServices';
 
 const fetchUserInvestments = async () => {
   let userId = await getId();
@@ -46,6 +46,7 @@ const deleteInvestmentAPI = async (id) => {
   console.log(`Deleting investment ${id}`);
   // Example: await apiClient.delete(`/api/investments/${id}`);
   // return { success: true };
+  await deleteInvestment(id); 
   await new Promise(resolve => setTimeout(resolve, 300));
   return { deletedCount: 1 }; // Mock response (match backend/data layer)
 };

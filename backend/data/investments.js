@@ -5,6 +5,7 @@ import {
   userFinancials,
 } from "../config/mongoCollections.js";
 import subInvestmentData from "./subInvestments.js";
+import userData from "./users.js";
 import validation from "../validation.js";
 
 const exportedMethods = {
@@ -82,9 +83,11 @@ const exportedMethods = {
     deletionInfo.subInvestments.forEach((subInvestmentId) => {
       subInvestmentData.removeSubInvestment(subInvestmentId);
     });
+    const user = await userData.getUserById(deletionInfo.userId);
+    const userFinancialId = user.userFinancialId;
     const userFinancialsCollection = await userFinancials();
     await userFinancialsCollection.findOneAndUpdate(
-      { _id: new ObjectId(deletionInfo.userFinId) },
+      { _id: new ObjectId(userFinancialId) },
       { $pull: { investments: deletionInfo._id } },
       { returnDocument: "after" }
     );

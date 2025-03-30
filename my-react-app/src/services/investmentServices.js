@@ -30,3 +30,17 @@ export const createInvestment = async (investmentCategory) => {
         throw error;
     }
 }
+
+export const deleteInvestment = async (investmentId) => {
+    try {
+        const response = await axios.delete(`${apiUrl}/api/investments/${investmentId}`, { 
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error deleting investment ${investmentId}:`, error);
+        throw error;
+    }
+}
