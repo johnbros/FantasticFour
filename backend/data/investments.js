@@ -1,5 +1,9 @@
 import { ObjectId } from "mongodb";
-import { investments, subInvestments, userFinancials } from "../config/mongoCollections.js";
+import {
+  investments,
+  subInvestments,
+  userFinancials,
+} from "../config/mongoCollections.js";
 import subInvestmentData from "./subInvestments.js";
 import validation from "../validation.js";
 
@@ -78,6 +82,12 @@ const exportedMethods = {
     deletionInfo.subInvestments.forEach((subInvestmentId) => {
       subInvestmentData.removeSubInvestment(subInvestmentId);
     });
+    const userFinancialsCollection = await userFinancials();
+    await userFinancialsCollection.findOneAndUpdate(
+      { _id: new ObjectId(deletionInfo.userFinId) },
+      { $pull: { investments: deletionInfo._id } },
+      { returnDocument: "after" }
+    );
     return { ...deletionInfo, deleted: true };
   },
 

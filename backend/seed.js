@@ -108,7 +108,7 @@ const everythingelse = async () => {
     console.log("Investment checked:", getInvestmentById);
 
     const delete2 = await investments.removeInvestment(
-      investment2._id.toString()
+      investment2._id
     );
   } catch (error) {
     console.error("Error adding user:", error);
