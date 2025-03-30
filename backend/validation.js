@@ -28,6 +28,15 @@ const exportedMethods = {
     return strVal;
   },
 
+  checkConfirmPassword(password, confirmPassword) {
+    // Validate if the confirm password matches the password
+    if (!confirmPassword) throw "Confirm Password is required!";
+    if (password !== confirmPassword)
+      throw "Password and Confirm Password do not match!";
+    return confirmPassword;
+  },
+  
+
   checkId(id, valName) {
     if (!ObjectId.isValid(id)) throw `invalid ${valName} Id`;
     return id;
@@ -35,8 +44,8 @@ const exportedMethods = {
 
   checkName(strVal, valName) {
     strVal = this.checkString(strVal, valName);
-    if (strVal.length < 5 || strVal.length > 25)
-      throw `the ${valName} ${strVal} is not between 5 and 25 characters`;
+    if (strVal.length < 2 || strVal.length > 25)
+      throw `the ${valName} ${strVal} is not between 2 and 25 characters`;
     let re = /^(?=.*[a-zA-Z])[a-zA-Z\s.'-]+$/;
     if (!re.test(strVal)) {
       throw `${valName} must only contain letters and spaces with the exception of apostrophes, hyphens, and periods`;
