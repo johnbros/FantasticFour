@@ -99,8 +99,8 @@ const exportedMethods = {
     });
     if (!deletionInfo) throw `Could not delete post with id of ${id}`;
     if (deletionInfo.userFinancialId) {
-      userFinancialData.removeUserFinancials(
-        deletionInfo.userFinancialId.toString()
+      await userFinancialData.removeUserFinancials(
+        deletionInfo.userFinancialId
       );
     }
     return { ...deletionInfo, deleted: true };

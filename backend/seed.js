@@ -3,6 +3,7 @@ import { dbConnection, closeConnection } from "./config/mongoConnection.js";
 import users from "./data/users.js";
 import investments from "./data/investments.js";
 import userFinancials from "./data/userfinancials.js";
+import subInvestments from "./data/subInvestments.js";
 import { ObjectId } from "mongodb";
 
 import dotenv from "dotenv";
@@ -107,9 +108,25 @@ const everythingelse = async () => {
     );
     console.log("Investment checked:", getInvestmentById);
 
-    const delete2 = await investments.removeInvestment(
-      investment2._id
+    const Subinvestment = await subInvestments.addSubInvestment(
+      investment1._id,
+      "subInvestment",
+      1000,
     );
+    const subInvestment2 = await subInvestments.addSubInvestment(
+      investment1._id,
+      "subInvestment again",
+      3000,
+    );
+
+    // const delete2 = await investments.removeInvestment(
+    //   investment2._id
+    // );
+
+    const delete2 = await investments.removeInvestment(
+      investment1._id
+    );
+    console.log("User removed:", delete2);
   } catch (error) {
     console.error("Error adding user:", error);
   }

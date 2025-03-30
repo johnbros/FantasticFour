@@ -54,9 +54,9 @@ const exportedMethods = {
             _id: new ObjectId(id),
         });
         if (!deletionInfo) throw `Could not delete user financials with id of ${id}`;
-        deletionInfo.investments.forEach(investmentId => {
-            investmentData.removeInvestment(investmentId);
-        });
+        for (const investmentId of deletionInfo.investments) {
+            await investmentData.removeInvestment(investmentId);
+        }
         return { ...deletionInfo, deleted: true };
     },
 

@@ -1,12 +1,13 @@
 import { ObjectId } from "mongodb";
 import { subInvestments, investments } from "../config/mongoCollections.js";
+import investmentsData from "./investments.js";
 import validation from "../validation.js";
 
 const exportedMethods = {
     async getSubInvestmentById(id) {
         id = validation.checkId(id);
         const subInvestmentCollection = await subInvestments();
-        const subInvestment = await subInvestmentCollection.findOne({ _id: ObjectId(id) });
+        const subInvestment = await subInvestmentCollection.findOne({ _id: new ObjectId(id) });
         if (!subInvestment) throw "Sub investment not found";
         return subInvestment;
     },
@@ -19,16 +20,13 @@ const exportedMethods = {
 
         const subInvestmentCollection = await subInvestments();
         const investmentCollection = await investments();
-        const investmentsInfo = await investmentCollection.getInvestmentById(investmentId);
+        const investmentsInfo = await investmentsData.getInvestmentById(investmentId);
         if (!investmentsInfo) throw "Investment not found";
-        const investmentPercentage = (totalValue / (investmentsInfo.totalValue + totalValue)) * 100;
-        if (investmentPercentage > 100) throw "Investment percentage cannot exceed 100%";
 
         const newSubInvestment = {
-            investmentId: ObjectId(investmentId),
+            investmentId: new ObjectId(investmentId),
             name,
             value,
-            investmentPercentage,
             dateInvested: new Date(),
         };
 

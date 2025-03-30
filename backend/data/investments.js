@@ -9,7 +9,6 @@ import validation from "../validation.js";
 
 const exportedMethods = {
   async getInvestmentById(id) {
-    console.log(id);
     id = validation.checkId(id, "Investment Id");
     const investmentCollection = await investments();
     const investment = await investmentCollection.findOne({
@@ -19,16 +18,17 @@ const exportedMethods = {
     return investment;
   },
 
-  async addInvestment(userId, userFinancialId, investmentType) {
-    userId = validation.checkId(userId, "User Id");
-    userFinancialId = validation.checkId(userFinancialId, "Financial Id");
+  async addInvestment(userFinId, investmentType, value, dateInvested) {
+    userFinId = validation.checkId(userFinId, "user financials");
     investmentType = validation.checkString(investmentType, "investment type");
+    value = validation.checkNum(value, "investment value");
     // TODO; // dateInvested = validation.checkDateInvested(dateInvested)
 
     const newInvestment = {
-      userId,
+      userFinId,
       investmentType,
-      value: 0,
+      value,
+      dateInvested,
       subInvestments: [],
     };
 
@@ -37,11 +37,11 @@ const exportedMethods = {
     const newId = insertInfo.insertedId;
     const userFinancialsCollection = await userFinancials();
     const updatedFinancials = await userFinancialsCollection.findOneAndUpdate(
-      { _id: new ObjectId(userFinancialId) },
-      { $push: { investments: newId} },
+      { _id: new ObjectId(userFinId) },
+      { $push: { investments: insertInfo.insertedId } },
       { returnDocument: "after" }
     );
-    return await this.getInvestmentById(newId);
+    return await this.getInvestmentById(newId.toString());
   },
 
   async updateInvestment(id, updatedInvestment) {
@@ -79,15 +79,12 @@ const exportedMethods = {
       _id: new ObjectId(id),
     });
     if (!deletionInfo) throw `Could not delete post with id of ${id}`;
-    deletionInfo.subInvestments.forEach((subInvestmentId) => {
-      subInvestmentData.removeSubInvestment(subInvestmentId);
-    });
-    const userFinancialsCollection = await userFinancials();
-    await userFinancialsCollection.findOneAndUpdate(
-      { _id: new ObjectId(deletionInfo.userFinId) },
-      { $pull: { investments: deletionInfo._id } },
-      { returnDocument: "after" }
-    );
+    // deletionInfo.subInvestments.forEach((subInvestmentId) => {
+    //   subInvestmentData.removeSubInvestment(subInvestmentId);
+    // });
+    for (const subInvestmentId of deletionInfo.subInvestments) {
+      await subInvestmentData.removeSubInvestment(subInvestmentId);
+    }
     return { ...deletionInfo, deleted: true };
   },
 
