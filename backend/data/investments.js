@@ -24,8 +24,8 @@ const exportedMethods = {
     const newInvestment = {
       userId,
       investmentType,
-      totalValue: 0,
-      investmentPercentage: 0,
+    //   totalValue: 0,
+    //   investmentPercentage: 0,
       dateInvested: new Date(),
       subInvestments: [],
     };
