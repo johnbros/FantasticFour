@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/authContext'; 
 import {fetchUser, getId, fetchUserFinacials} from '../services/userServices'; 
 import { fetchInvestment, createInvestment, deleteInvestment } from '../services/investmentServices';
+import './profile.css'
 
 const fetchUserInvestments = async () => {
   let userId = await getId();

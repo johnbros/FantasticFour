@@ -1,0 +1,197 @@
+/* Global Styles */
+body {
+    background-color: #2c3e50; /* Dark background */
+    color: #ecf0f1; /* Light text for contrast */
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  h2, h3 {
+    font-weight: bold;
+    color: #ecf0f1; /* Light text for headings */
+  }
+  
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  hr {
+    border: 1px solid #34495e; /* Darker border for separation */
+    margin: 20px 0;
+  }
+  
+  /* Button Styles */
+  button {
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 10px;
+    color: #fff; /* Light text color for buttons */
+    background-color: #2980b9; /* Default blue background */
+  }
+  
+  button:hover {
+    background-color: #3498db; /* Lighter blue on hover */
+    color: #fff; /* Keep text color white on hover */
+    transform: translateY(-2px); /* Slight raise effect on hover */
+  }
+  
+  button:disabled {
+    background-color: #7f8c8d;
+    cursor: not-allowed;
+  }
+  
+  /* Investment Form Submit Button */
+  button[type="submit"] {
+    background-color: #2ecc71; /* Green for submit */
+    width: 100%;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #27ae60; /* Slightly darker green on hover */
+  }
+  
+  /* Investment Action Buttons */
+  button[type="button"] {
+    background-color: #f39c12;
+    color: white;
+  }
+  
+  button[type="button"]:hover {
+    background-color: #e67e22; /* Lighter orange on hover */
+  }
+  
+ /* Delete Button */
+button[style*="color: red"] {
+    background-color: transparent;
+    color: red;
+    border: 1px solid red;
+  }
+  
+  button[style*="color: red"]:hover {
+    background-color: red;
+    color: white !important; /* force white text on hover */
+  }
+  
+  /* Add Investment Section */
+  button[onClick] {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    font-size: 18px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  button[onClick]:hover {
+    background-color: #2980b9;
+    color: #fff; /* Keep text color white on hover */
+    transform: translateY(-2px); /* Slight raise effect on hover */
+  }
+  
+  /* Button Disabled State */
+  button:disabled {
+    background-color: #7f8c8d;
+    color: #bdc3c7; /* Light gray text on disabled buttons */
+    cursor: not-allowed;
+  }
+  
+  /* General Form Styles */
+  form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #34495e;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  form div {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    font-size: 16px;
+    color: #ecf0f1;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #7f8c8d;
+    background-color: #34495e;
+    color: #ecf0f1;
+  }
+  
+  input:focus {
+    border-color: #3498db;
+    outline: none;
+  }
+  
+  input[disabled] {
+    background-color: #7f8c8d;
+  }
+  
+  /* Error Message */
+  .error-message {
+    color: red;
+    font-size: 14px;
+  }
+  
+  /* Investment List Styles */
+  ul li {
+    padding: 10px;
+    background-color: #3a4d64;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #7f8c8d;
+  }
+  
+  ul li p {
+    font-size: 16px;
+    color: #ecf0f1;
+  }
+  
+  ul li button {
+    margin-top: 10px;
+    padding: 8px 16px;
+  }
+  
+  /* Editing Investment */
+  ul li.editing {
+    background-color: #2980b9;
+  }
+  
+  ul li.editing p {
+    color: #fff;
+  }
+  
+  /* Add Investment Button */
+  button[onClick] {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 12px 24px;
+    font-size: 18px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  button[onClick]:hover {
+    background-color: #2980b9;
+    color: #fff; /* Keep text color white on hover */
+    transform: translateY(-2px); /* Slight raise effect on hover */
+  }
+  
