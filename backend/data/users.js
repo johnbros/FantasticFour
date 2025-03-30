@@ -6,7 +6,8 @@ import validation from "../validation.js";
 
 const saltRounds = 11;
 
-export async function getUserById(id){
+const exportedMethods = {
+    async  getUserById(id){
     id = validation.checkId(id, "User Id");
     const userCollection = await users();
     const user = await userCollection.findOne({ _id: ObjectId(id) });
@@ -20,9 +21,9 @@ export async function getUserById(id){
         createdAt: user.createdAt,  
     };
     return result;
-}
+},
 
-export async function signUpUser(firstName, lastName, email, password){
+    async signUpUser(firstName, lastName, email, password){
     firstName = validation.checkName(firstName, "firstName");
     lastName = validation.checkName(lastName, "lastName");
     email = validation.checkEmail(email, "email");
@@ -53,9 +54,9 @@ export async function signUpUser(firstName, lastName, email, password){
         createdAt: new Date(),
     };
     return result;
-}
+},
 
-export async function loginUser(email, password){
+    async loginUser(email, password){
     email = validation.checkEmail(email, "email");
     password = validation.checkPassword(password);
 
@@ -83,9 +84,9 @@ export async function loginUser(email, password){
         token: token,
         payload: payload,
     };
-}
+},
 
-export async function removeUser(id){
+    async removeUser(id){
     id = validation.checkId(id, "User Id");
     const userCollection = await users();
     const deletionInfo = await userCollection.findOneAndDelete({
@@ -94,5 +95,7 @@ export async function removeUser(id){
         if (!deletionInfo) throw `Could not delete post with id of ${id}`;
         return { ...deletionInfo, deleted: true };
 }
+}
+export default exportedMethods;
 
 
