@@ -2,6 +2,10 @@ import React from 'react'
 import { useState } from 'react';
 import { isValidPassword, isValidEmail, isValidFirstName, isValidLastName } from '../src/helpers/authHelpers';
 import './Login.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const Signup = () => {
     const [email, setEmail] = useState('');
@@ -12,7 +16,9 @@ const Signup = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = (e) => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
@@ -29,8 +35,24 @@ const Signup = () => {
             
             // TODO: Implement signup logic
             console.log(email, firstName, lastName, password, confirmPassword);
+            console.log(`${apiUrl}/api/auth/`);
+            const createUser = await axios.post(`${apiUrl}/api/auth/`, {
+                email,
+                firstName,
+                lastName,
+                password
+            });
+
+            console.log(createUser);
+            // if the user is not created, throw an error
+            if (createUser.status !== 201) {
+                throw createUser.data.error;
+            }
+            // if the user is created, navigate to the login page
+            navigate('/login');
             setLoading(false);
         } catch (e) {
+            console.log(e);
             setLoading(false);
             setError(e.message);
         }

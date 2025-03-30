@@ -44,8 +44,8 @@ export const isValidFirstName = (firstName) => {
     if (typeof firstName !== 'string' || firstName.trim() === '') {
         throw new Error('First name must be a string and not empty');
     }
-    if (firstName.length < 1 || firstName.length > 20) {
-        throw new Error('First name must be between 1 and 20 characters');
+    if (firstName.length < 5 || firstName.length > 25) {
+        throw new Error('First name must be between 5 and 25 characters');
     }
     return true;
 }
@@ -57,8 +57,8 @@ export const isValidLastName = (lastName) => {
     if (typeof lastName !== 'string' || lastName.trim() === '') {
         throw new Error('Last name must be a string and not empty');
     }
-    if (lastName.length < 1 || lastName.length > 20) {
-        throw new Error('Last name must be between 1 and 20 characters');
+    if (lastName.length < 5 || lastName.length > 25) {
+        throw new Error('Last name must be between 5 and 25 characters');
     }
     return true;
 }

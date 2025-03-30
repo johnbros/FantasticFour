@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { isValidEmail, isValidPassword } from "../src/helpers/authHelpers";
 import './Login.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,7 +12,9 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -18,9 +24,19 @@ const Login = () => {
       isValidPassword(password);
       
       // TODO: Implement login logic
-      console.log(email, password);
+      const loginUser = await axios.post(`${apiUrl}/api/auth/login`, {
+        email,
+        password
+      });
+
+      if (loginUser.status !== 200) {
+        throw loginUser.data.error;
+      }
+
+      navigate('/');
       setLoading(false);
     } catch (e) {
+      console.log(e);
       setLoading(false);
       setError(e.message);
     }
