@@ -192,6 +192,24 @@
     filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.8));
 }
 
+/* Floating Ducks */
+.floating-duck {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 20px rgba(255, 0, 130, 0.5));
+    z-index: 1;
+}
+
+.floating-duck:hover {
+    transform: scale(1.2) rotate(10deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.8));
+}
+
 .duck-1 {
     top: 20%;
     left: 10%;
@@ -305,11 +323,14 @@
 
 /* Animations */
 @keyframes float {
-    0%, 100% {
-        transform: translateY(0) rotate(0);
+    0% {
+        transform: translateY(0px) rotate(0deg);
     }
     50% {
         transform: translateY(-20px) rotate(5deg);
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
     }
 }
 
@@ -353,9 +374,9 @@
         font-size: 1.4rem;
     }
     
-    .duck {
-        width: 60px;
-        height: 60px;
+    .floating-duck {
+        width: 40px;
+        height: 40px;
     }
 
     .feature-card {

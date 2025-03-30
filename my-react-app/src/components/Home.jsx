@@ -15,10 +15,26 @@ const Home = () => {
             
             {/* Hero Section with Decorative Ducks */}
             <section className="hero-section">
-                <div className="duck duck-1"></div>
-                <div className="duck duck-2"></div>
-                <div className="duck duck-3"></div>
-                <div className="duck duck-4"></div>
+                <img 
+                    src="/duck_monical.png" 
+                    alt="Floating Duck 1" 
+                    className="floating-duck duck-1"
+                />
+                <img 
+                    src="/duck_water.png" 
+                    alt="Floating Duck 2" 
+                    className="floating-duck duck-2"
+                />
+                <img 
+                    src="/duck_monical.png" 
+                    alt="Floating Duck 3" 
+                    className="floating-duck duck-3"
+                />
+                <img 
+                    src="/duck_water.png" 
+                    alt="Floating Duck 4" 
+                    className="floating-duck duck-4"
+                />
                 
                 <div className={`hero-content ${isVisible ? 'visible' : ''}`}>
                     <div className="title-container">
