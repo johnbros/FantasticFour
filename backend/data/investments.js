@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { investments, subInvestments } from "../config/mongoCollections.js";
+import userFinancial from "./userfinancials.js";
 
 const exportedMethods = {
   async getInvestmentById(id) {
@@ -12,13 +13,12 @@ const exportedMethods = {
     return investment;
   },
 
-  async addInvestment(userId, investmentType, dateInvested) {
+  async addInvestment(userId, investmentType) {
     userId = validation.checkId(userId);
     investmentType = validation.checkString(investmentType);
     // totalValue = validation.checkNum(totalValue);
     // TODO; //calculate investmentPercentage based on totalValue and investmentType
     // investmentPercentage = validation.checkPercentage(investmentPercentage);
-    TODO; // dateInvested = validation.checkDateInvested(dateInvested)
 
     const newInvestment = {
       userId,
@@ -29,9 +29,15 @@ const exportedMethods = {
       subInvestments: [],
     };
 
+
     const investmentCollection = await investments();
     const insertInfo = await investmentCollection.insertOne(newInvestment);
     const newId = insertInfo.insertedId;
+    const updatedFinancials = await userFinancial.findOneAndUpdate(
+            { _id: new ObjectId(userId) },
+            { $push: { investments: insertInfo.insertedId } },
+            { returnDocument: "after" }
+    );
     return await this.getInvestmentById(newId.toString());
   },
 

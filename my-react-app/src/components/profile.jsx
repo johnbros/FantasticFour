@@ -55,7 +55,7 @@ const deleteInvestmentAPI = async (id) => {
 
 // --- Simple Investment Form Component (Example) ---
 // You might make this more sophisticated or reuse it
-const InvestmentForm = ({ initialData = { type: '', symbol: '', quantity: '', purchasePrice: '' }, onSubmit, onCancel, isSaving }) => {
+const InvestmentForm = ({ initialData = { category: '', totalValue: '' }, onSubmit, onCancel, isSaving }) => {
   const [formData, setFormData] = useState(initialData);
 
   const handleChange = (e) => {
@@ -78,20 +78,8 @@ const InvestmentForm = ({ initialData = { type: '', symbol: '', quantity: '', pu
     <form onSubmit={handleSubmit}>
       {/* Add more input fields based on your investment structure */}
       <div>
-        <label>Type:</label>
-        <input name="type" value={formData.type} onChange={handleChange} required disabled={isSaving} />
-      </div>
-      <div>
-        <label>Symbol:</label>
-        <input name="symbol" value={formData.symbol} onChange={handleChange} required disabled={isSaving} />
-      </div>
-      <div>
-        <label>Quantity:</label>
-        <input type="number" name="quantity" value={formData.quantity} onChange={handleChange} required disabled={isSaving} step="any" />
-      </div>
-      <div>
-        <label>Purchase Price:</label>
-        <input type="number" name="purchasePrice" value={formData.purchasePrice} onChange={handleChange} required disabled={isSaving} step="any" />
+        <label>Category:</label>
+        <input name="" value={formData.type} onChange={handleChange} required disabled={isSaving} />
       </div>
       <button type="submit" disabled={isSaving}>{isSaving ? 'Saving...' : 'Save'}</button>
       {onCancel && <button type="button" onClick={onCancel} disabled={isSaving}>Cancel</button>}
@@ -208,11 +196,11 @@ function Profile() {
 
       {/* --- Add Investment Section --- */}
       {!isAdding && (
-        <button onClick={() => setIsAdding(true)} disabled={isSaving}>Add New Investment</button>
+        <button onClick={() => setIsAdding(true)} disabled={isSaving}>Add New Investment Category</button>
       )}
       {isAdding && (
         <div>
-          <h3>Add New Investment</h3>
+          <h3>Add New Investment Category</h3>
           <InvestmentForm
             onSubmit={handleAddSubmit}
             onCancel={() => setIsAdding(false)}
@@ -242,7 +230,7 @@ function Profile() {
               ) : (
                 // --- Display Data ---
                 <div>
-                  <p><strong>Type:</strong> {inv.type}</p>
+                  <p><strong>Category:</strong> {inv.category}</p>
                   <p><strong>Symbol:</strong> {inv.symbol}</p>
                   <p><strong>Quantity:</strong> {inv.quantity}</p>
                   <p><strong>Purchase Price:</strong> ${inv.purchasePrice?.toFixed(2)}</p> {/* Example formatting */}

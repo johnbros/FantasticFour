@@ -17,4 +17,16 @@ export const fetchInvestment = async (investmentId) => {
     }
 }
 
-
+export const createInvestment = async (investmentCategory) => {
+    try {
+        const response = await axios.post(`${apiUrl}/api/investments`, investmentCategory, { 
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error creating investment:", error);
+        throw error;
+    }
+}

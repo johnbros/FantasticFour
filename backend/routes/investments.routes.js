@@ -21,7 +21,7 @@ router.get('/:id', checkAuth, async (req, res) => {
     try {
         id = validation.checkId(id, "Investment Id");
     } catch (error) {
-        
+
         return res.status(400).json({ error: error.message });
     }
     try {
@@ -45,6 +45,24 @@ router.get('/:id', checkAuth, async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.post('/', checkAuth, async (req, res) => {
+    let investmentType = req.body.investmentType;
+    let loggedInUserId = req.userData._id;
+    let investmentId = null;
+
+    try {
+        investmentId = await investments.addInvestment(loggedInUserId, investmentType);
+        if (!investmentId) {
+            return res.status(500).json({ error: 'Error inserting investment id' });
+        }
+        res.status(200).json(investmentsId);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+);
 
 export default router;
 
