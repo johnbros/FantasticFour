@@ -2,47 +2,52 @@ import express from 'express';
 
 import { checkAuth } from '../middleware/auth.middleware.js';
 import investments from '../data/investments.js';
-
+import validation from '../validation.js';
+import userData from '../data/users.js';
 
 const router = express.Router();
 
 router.get('/:id', checkAuth, async (req, res) => {
     let { id } = req.params;
-    let loggedInUserId = req.userData._id;
-    let investment = null;
-    
+    // Use req.userData.userId if that's what your checkAuth provides
+    const loggedInUserId = req.userData.userId; // Assuming checkAuth provides this
 
+    // --- Input Validation ---
     if (!id) {
         return res.status(400).json({ error: 'Investment ID is required' });
     }
-    id = id.trim(); 
-    loggedInUserId = loggedInUserId.trim();
-
     try {
+        // If validation modifies ID (like trimming), keep reassignment, otherwise const is fine
         id = validation.checkId(id, "Investment Id");
     } catch (error) {
-
-        return res.status(400).json({ error: error.message });
+        console.log("ID Validation Error:", error);
+        return res.status(400).json({ error: error.message || 'Invalid Investment ID format' });
     }
+
+    // --- Fetch, Authorize, and Respond ---
     try {
-        investment = await investments.getInvestmentById(id);
+        // 1. Fetch Investment
+        const investment = await investments.getInvestmentById(id);
+
+        // 2. Check if Found
         if (!investment) {
             return res.status(404).json({ error: 'Investment not found' });
         }
-        res.status(200).json(investment);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: error.message });
-    }
 
-    try {
-        if(loggedInUserId !== investment.userId) {
+        // 3. Authorize (Ensure investment object has a userId field!)
+        //    Make sure the types are comparable (both strings)
+        if (loggedInUserId.toString() !== investment.userId.toString()) {
             return res.status(403).json({ error: 'You are not authorized to access this Investment' });
         }
+
+        // 4. Send SUCCESS Response (Only if found and authorized)
         res.status(200).json(investment);
+
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: error.message });
+        // Handle errors from getInvestmentById or potential issues above
+        console.log(`Error fetching/authorizing investment ${id}:`, error);
+        // Check for specific data layer errors if possible, otherwise default to 500
+        res.status(500).json({ error: error.message || 'Internal server error retrieving investment' });
     }
 });
 
@@ -51,9 +56,14 @@ router.post('/', checkAuth, async (req, res) => {
     let loggedInUserId = req.userData.userId;
     console.log(investmentType);
     let investmentId = null;
+    let user = null;
 
     try {
-        investmentId = await investments.addInvestment(loggedInUserId, investmentType);
+        user = await userData.getUserById(loggedInUserId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        investmentId = await investments.addInvestment(loggedInUserId, user.userFinancialId, investmentType);
         if (!investmentId) {
             return res.status(500).json({ error: 'Error inserting investment id' });
         }

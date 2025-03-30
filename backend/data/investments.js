@@ -5,6 +5,7 @@ import validation from "../validation.js";
 
 const exportedMethods = {
   async getInvestmentById(id) {
+    console.log(id);
     id = validation.checkId(id, "Investment Id");
     const investmentCollection = await investments();
     const investment = await investmentCollection.findOne({
@@ -14,17 +15,17 @@ const exportedMethods = {
     return investment;
   },
 
-  async addInvestment(userFinId, investmentType, value, dateInvested) {
-    userFinId = validation.checkId(userFinId, "user financials");
+  async addInvestment(userId, userFinancialId, investmentType) {
+    userId = validation.checkId(userId, "User Id");
+    console.log(userFinancialId)
+    userFinancialId = validation.checkId(userFinancialId, "Financial Id");
     investmentType = validation.checkString(investmentType, "investment type");
-    value = validation.checkNum(value, "investment value");
     // TODO; // dateInvested = validation.checkDateInvested(dateInvested)
 
     const newInvestment = {
-      userFinId,
+      userId,
       investmentType,
-      value,
-      dateInvested,
+      value: 0,
       subInvestments: [],
     };
 
@@ -33,11 +34,11 @@ const exportedMethods = {
     const newId = insertInfo.insertedId;
     const userFinancialsCollection = await userFinancials();
     const updatedFinancials = await userFinancialsCollection.findOneAndUpdate(
-      { _id: new ObjectId(userFinId) },
-      { $push: { investments: insertInfo.insertedId } },
+      { _id: new ObjectId(userFinancialId) },
+      { $push: { investments: newId} },
       { returnDocument: "after" }
     );
-    return await this.getInvestmentById(newId.toString());
+    return await this.getInvestmentById(newId);
   },
 
   async updateInvestment(id, updatedInvestment) {

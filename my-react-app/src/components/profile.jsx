@@ -18,8 +18,9 @@ const fetchUserInvestments = async () => {
 if (!investments || investments.length === 0) {
     return []; // Return empty array if no investments found
 }
+console.log(investments)
 const fullInvestments = await Promise.all(investments.map(async (inv) => {
-    const investmentDetails = await fetchInvestment(inv.id);
+    const investmentDetails = await fetchInvestment(inv);
     return { ...inv, ...investmentDetails };
 }));
     return fullInvestments;
@@ -128,6 +129,8 @@ function Profile() {
       // Extract just the category name and pass it to createInvestment
       const categoryName = newInvestmentData.category;
       const addedInvestment = await createInvestment(categoryName);
+      const newInvestment = await fetchInvestment(addedInvestment._id); 
+      setInvestments(prev => [...prev, newInvestment]); // Add to list
       setIsAdding(false); // Close add form
     } catch (err) {
       console.error("Failed to add investment:", err);
