@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { isValidPassword, isValidEmail, isValidFirstName, isValidLastName } from '../src/helpers/authHelpers';
+import { isValidPassword, isValidEmail, isValidFirstName, isValidLastName } from '../helpers/authHelpers';
 import './Login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';

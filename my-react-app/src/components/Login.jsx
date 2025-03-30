@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { isValidEmail, isValidPassword } from "../src/helpers/authHelpers";
+import { isValidEmail, isValidPassword } from "../helpers/authHelpers";
 import './Login.css';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../src/context/authContext';
+import { useAuth } from '../context/authContext';
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 

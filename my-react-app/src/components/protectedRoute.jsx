@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../src/context/authContext'; // Import your auth hook
+import { useAuth } from '../context/authContext'; // Import your auth hook
 
 const ProtectedRoute = () => {
   const { isAuthenticated } = useAuth(); // Get auth status from context
