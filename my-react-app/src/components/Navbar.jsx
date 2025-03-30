@@ -12,7 +12,9 @@ const Navbar = (props) => {
                 </Link>
                 <div className="nav-links">
                     <Link to="/logout">Logout</Link>
+                    <Link to="/profile">Profile</Link>
                 </div>
+                
             </nav>
         );
     } else {
