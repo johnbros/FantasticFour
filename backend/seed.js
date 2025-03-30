@@ -52,8 +52,13 @@ const seed = async () => {
 
 
     const getUserById = await users.getUserById(user1._id.toString());
-    console.log("User checked:", getUserById);
-    
+    // console.log("User checked:", getUserById);
+    const checkSignin = await users.loginUser(
+      userinfo1.email,
+      userinfo1.password
+    );
+
+
   } catch (error) {
     console.error("Error adding user:", error);
   }
