@@ -5,6 +5,7 @@ import { useAuth } from '../context/authContext';
 import {fetchUser, getId, fetchUserFinacials} from '../services/userServices'; 
 import { fetchInvestment, createInvestment, deleteInvestment } from '../services/investmentServices';
 import './profile.css'
+import { useNavigate } from 'react-router-dom';
 
 const fetchUserInvestments = async () => {
   let userId = await getId();
@@ -19,7 +20,6 @@ const fetchUserInvestments = async () => {
 if (!investments || investments.length === 0) {
     return []; // Return empty array if no investments found
 }
-console.log(investments)
 const fullInvestments = await Promise.all(investments.map(async (inv) => {
     const investmentDetails = await fetchInvestment(inv);
     return { ...inv, ...investmentDetails };
@@ -29,33 +29,22 @@ const fullInvestments = await Promise.all(investments.map(async (inv) => {
 
 const addInvestmentAPI = async (investmentData) => {
   console.log('Adding investment:', investmentData);
-  // Example: const response = await apiClient.post('/api/investments', investmentData);
-  // return response.data; // Should return the newly created investment with _id
   await new Promise(resolve => setTimeout(resolve, 300));
-  return { ...investmentData, _id: `newInv_${Date.now()}` }; // Mock response
+  return { ...investmentData, _id: `newInv_${Date.now()}` };
 };
 
 const updateInvestmentAPI = async (id, investmentData) => {
   console.log(`Updating investment ${id}:`, investmentData);
-  // Example: const response = await apiClient.put(`/api/investments/${id}`, investmentData);
-  // return response.data; // Should return the updated investment
   await new Promise(resolve => setTimeout(resolve, 300));
-  return { ...investmentData, _id: id }; // Mock response
+  return { ...investmentData, _id: id }; 
 };
 
 const deleteInvestmentAPI = async (id) => {
   console.log(`Deleting investment ${id}`);
-  // Example: await apiClient.delete(`/api/investments/${id}`);
-  // return { success: true };
   await deleteInvestment(id); 
   await new Promise(resolve => setTimeout(resolve, 300));
-  return { deletedCount: 1 }; // Mock response (match backend/data layer)
+  return { deletedCount: 1 }; 
 };
-// --- End Mock API Service Functions ---
-
-
-// --- Simple Investment Form Component (Example) ---
-// You might make this more sophisticated or reuse it
 const InvestmentForm = ({ initialData = { category: '', totalValue: '' }, onSubmit, onCancel, isSaving }) => {
   const [formData, setFormData] = useState(initialData);
 
@@ -66,7 +55,6 @@ const InvestmentForm = ({ initialData = { category: '', totalValue: '' }, onSubm
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Basic conversion for numbers before submitting
     const numericData = {
         ...formData,
         quantity: parseFloat(formData.quantity) || 0,
@@ -92,6 +80,7 @@ const InvestmentForm = ({ initialData = { category: '', totalValue: '' }, onSubm
 // --- Main Page Component ---
 function Profile() {
   const { user } = useAuth(); // Get logged-in user info if needed for context
+  const navigate = useNavigate();
 
   // State
   const [investments, setInvestments] = useState([]);
@@ -99,14 +88,12 @@ function Profile() {
   const [error, setError] = useState(null);
   const [editingInvestmentId, setEditingInvestmentId] = useState(null); // ID of investment being edited
   const [isAdding, setIsAdding] = useState(false); // Toggle for add form
-  const [isSaving, setIsSaving] = useState(false); // For disabling forms/buttons during API calls
+  const [isSaving, setIsSaving] = useState(false); 
 
-  // Fetch investments on component mount
   const loadInvestments = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Replace with your actual API call function
       const data = await fetchUserInvestments();
       setInvestments(data || []); // Ensure it's an array
     } catch (err) {
@@ -128,16 +115,19 @@ function Profile() {
     setIsSaving(true);
     setError(null);
     try {
-      // Extract just the category name and pass it to createInvestment
       const categoryName = newInvestmentData.category;
       const addedInvestment = await createInvestment(categoryName);
-      const newInvestment = await fetchInvestment(addedInvestment._id); 
-      setInvestments(prev => [...prev, newInvestment]); // Add to list
+      const formattedInvestment = {
+        _id: addedInvestment._id,
+        category: addedInvestment.investmentType, 
+        purchasePrice: addedInvestment.value || 0,
+      };
+      
+      setInvestments(prev => [...prev, formattedInvestment]);
       setIsAdding(false); // Close add form
     } catch (err) {
       console.error("Failed to add investment:", err);
       setError("Failed to add investment. Please try again.");
-      // Keep form open on error? Optional.
     } finally {
       setIsSaving(false);
     }
@@ -164,15 +154,13 @@ function Profile() {
   };
 
   const handleDelete = async (idToDelete) => {
-    // Simple confirmation (use a modal for better UX)
     if (!window.confirm('Are you sure you want to delete this investment?')) {
       return;
     }
 
-    setIsSaving(true); // Use isSaving to indicate processing
+    setIsSaving(true); 
     setError(null);
     try {
-        // Replace with actual API call
       await deleteInvestmentAPI(idToDelete);
       setInvestments(prev => prev.filter(inv => inv._id !== idToDelete)); // Remove from list
     } catch (err) {
@@ -233,10 +221,26 @@ function Profile() {
               ) : (
                 // --- Display Data ---
                 <div>
-                  <p><strong>Category:</strong> {inv.category}</p>
-                  <p><strong>Total Value:</strong> ${inv.purchasePrice?.toFixed(2)}</p> {/* Example formatting */}
-                  <button onClick={() => setEditingInvestmentId(inv._id)} disabled={isSaving || editingInvestmentId}>Edit</button>
-                  <button onClick={() => handleDelete(inv._id)} disabled={isSaving || editingInvestmentId} style={{ marginLeft: '10px', color: 'red' }}>Delete</button>
+                  <p><strong>Category:</strong> {inv.investmentType || inv.category}</p>
+                  <p><strong>Total Value:</strong> ${(inv.value || inv.purchasePrice || 0).toFixed(2)}</p>
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                    <button 
+                      onClick={() => navigate(`/investments/${inv._id}`)} 
+                      disabled={isSaving}>
+                      View Details
+                    </button>
+                    <button 
+                      onClick={() => setEditingInvestmentId(inv._id)} 
+                      disabled={isSaving || editingInvestmentId}>
+                      Edit
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(inv._id)} 
+                      disabled={isSaving || editingInvestmentId} 
+                      style={{ color: 'red' }}>
+                      Delete
+                    </button>
+                  </div>
                 </div>
               )}
             </li>
