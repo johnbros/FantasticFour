@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard.jsx'
 import About from './components/About.jsx'
 import {ProtectedRoute,  UnprotectedRoute } from './components/protectedRoute.jsx'
 import NotFoundPage from './components/NotFoundPage.jsx'
+import InvestmentPreferencesPage from './components/InvestmentPreferencesPage.jsx'
 import Profile from './components/profile.jsx'
 import { useAuth } from '../src/context/authContext.jsx'
 import Logout from './components/Logout.jsx'
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/setup-financial-plan" element={<InvestmentPreferencesPage />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />
