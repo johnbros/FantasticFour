@@ -3,7 +3,9 @@ import userFinancialDataFunctions from './userfinancials.js';
 import investmentDataFunctions from './investments.js';
 import subInvestmentDataFunctions from './subInvestments.js';
 
-export const userData = userDataFunctions;
-export const userFinancialData = userFinancialDataFunctions;
-export const investmentData = investmentDataFunctions;
-export const subInvestmentData = subInvestmentDataFunctions;
+ const userData = userDataFunctions;
+ const userFinancialData = userFinancialDataFunctions;
+//  const investmentData = investmentDataFunctions;
+ const subInvestmentData = subInvestmentDataFunctions;
+
+export { userData, userFinancialData, subInvestmentData };

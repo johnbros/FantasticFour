@@ -20,6 +20,9 @@ export const isValidPassword = (password) => {
     if (!/[0-9]/.test(password)) {
         throw new Error('Password must contain at least one number');
     }
+    if (!/[@$!%*#?&\s]/.test(password)) {
+        throw new Error('Password must contain at least one special character');
+    }
 
     return true;
 }
@@ -34,6 +37,12 @@ export const isValidEmail = (email) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         throw new Error('Invalid email address');
     }
+    // Check if the domain is valid (at least one period after '@')
+    const domain = email.split('@')[1];
+    if (!domain || domain.split('.').length < 2) {
+        throw new Error('Email domain must be valid with at least one period');
+    }
+
     return true;
 }
 
@@ -44,9 +53,13 @@ export const isValidFirstName = (firstName) => {
     if (typeof firstName !== 'string' || firstName.trim() === '') {
         throw new Error('First name must be a string and not empty');
     }
-    if (firstName.length < 5 || firstName.length > 25) {
-        throw new Error('First name must be between 5 and 25 characters');
+    if (firstName.length < 2 || firstName.length > 25) {
+        throw new Error('First name must be between 2 and 25 characters');
     }
+    if (!/^[a-zA-Z\s-]+$/.test(firstName)) {
+        throw new Error('First name must not contain numbers or special characters');
+    }
+
     return true;
 }
 
@@ -57,8 +70,11 @@ export const isValidLastName = (lastName) => {
     if (typeof lastName !== 'string' || lastName.trim() === '') {
         throw new Error('Last name must be a string and not empty');
     }
-    if (lastName.length < 5 || lastName.length > 25) {
-        throw new Error('Last name must be between 5 and 25 characters');
+    if (lastName.length < 2 || lastName.length > 25) {
+        throw new Error('Last name must be between 2 and 25 characters');
+    }
+    if (!/^[a-zA-Z\s-]+$/.test(lastName)) {
+        throw new Error('Last name must not contain numbers or special characters');
     }
     return true;
 }
