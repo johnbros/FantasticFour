@@ -1,7 +1,7 @@
-import userDataFunctions from './userFunctions.js';
-import userFinancialDataFunctions from './userFinancialFunctions.js';
-import investmentDataFunctions from './investmentFunctions.js';
-import subInvestmentDataFunctions from './subInvestmentFunctions.js';
+import userDataFunctions from './users.js';
+import userFinancialDataFunctions from './userfinancials.js';
+import investmentDataFunctions from './investments.js';
+import subInvestmentDataFunctions from './subInvestments.js';
 
 export const userData = userDataFunctions;
 export const userFinancialData = userFinancialDataFunctions;

@@ -1,9 +1,8 @@
 import { ObjectId } from "mongodb";
 import userData from "./users.js";
-import investmentData from "./investments.js";
 import validation from "../validation.js";
 import { userFinancials, investments, users } from "../config/mongoCollections.js";
-import { investmentData } from "./index.js";
+import investmentData from "./investments.js";
 
 const exportedMethods = {
     async getUserFinancialsById(id) {

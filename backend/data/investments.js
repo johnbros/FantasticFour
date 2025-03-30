@@ -1,6 +1,5 @@
 import { ObjectId } from "mongodb";
-import { investments, subInvestments } from "../config/mongoCollections";
-import { get } from "http";
+import { investments, subInvestments } from "../config/mongoCollections.js";
 
 const exportedMethods = {
   async getInvestmentById(id) {
