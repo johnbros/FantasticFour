@@ -1,0 +1,219 @@
+.contact-container {
+    display: flex;
+    min-height: calc(100vh - 80px);
+    background-color: #0a0a0a;
+    padding: 2rem;
+    gap: 2rem;
+    position: relative;
+}
+
+.contact-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+    background: #1a1a1a;
+    color: white;
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    position: relative;
+    border: 1px solid #333333;
+}
+
+.contact-left h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.contact-description {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: #cccccc;
+    position: relative;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #262626;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s;
+    border: 1px solid #333333;
+}
+
+.info-item:hover {
+    transform: translateX(10px);
+    background: #333333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.info-item i {
+    font-size: 1.8rem;
+    color: #ffffff;
+}
+
+.info-item p {
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.contact-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+}
+
+.contact-form-container {
+    width: 100%;
+    max-width: 500px;
+    background: #1a1a1a;
+    padding: 2.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid #333333;
+}
+
+.contact-form-container h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    padding: 1rem;
+    background: #262626;
+    border: 1px solid #333333;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    color: #ffffff;
+    transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #666666;
+}
+
+.submit-button {
+    background: #333333;
+    color: white;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.submit-button:hover {
+    background: #404040;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.error-message {
+    background-color: #262626;
+    color: #ff4444;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border: 1px solid #333333;
+}
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    gap: 1rem;
+    background-color: #0a0a0a;
+    color: #ffffff;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #333333;
+    border-top: 4px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .contact-left {
+        padding: 1.5rem;
+    }
+
+    .contact-left h1 {
+        font-size: 2.5rem;
+    }
+
+    .contact-right {
+        padding: 1rem;
+    }
+
+    .contact-form-container {
+        padding: 1.5rem;
+    }
+} 

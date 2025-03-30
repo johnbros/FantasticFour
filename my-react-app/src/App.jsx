@@ -11,6 +11,7 @@ import NotFoundPage from './components/NotFoundPage.jsx'
 import Profile from './components/profile.jsx'
 import { useAuth } from '../src/context/authContext.jsx'
 import Logout from './components/Logout.jsx'
+import Contact from './components/Contact.jsx'
 
 
 
@@ -22,14 +23,18 @@ function App() {
       <div className="main-content">
         <Routes>
 
+            {/*non protected protected routes*/}
             <Route element={<UnprotectedRoute />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/about" element={<About />} />
-            
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/about" element={<About />} />
             </Route>
 
+            {/*non protected routes*/}
+            <Route path='/contact' element={<Contact />} />
+
+            {/*protected routes*/}
             <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/logout" element={<Logout />} />

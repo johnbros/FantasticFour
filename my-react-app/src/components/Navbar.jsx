@@ -11,6 +11,7 @@ const Navbar = (props) => {
                     Duck Finance
                 </Link>
                 <div className="nav-links">
+                    <Link to='/contact'>Contact</Link>
                     <Link to="/logout">Logout</Link>
                     <Link to="/profile">Profile</Link>
                 </div>
