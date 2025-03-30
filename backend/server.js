@@ -3,6 +3,8 @@ import cors from 'cors'
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
 import contactRoutes from './routes/contact.routes.js';
+import userRoutes from './routes/users.routes.js'; 
+import investmentsRoutes from './routes/investments.routes.js';
 
 dotenv.config();
 
@@ -16,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/users', userRoutes); 
+app.use('/api/investments', investmentsRoutes);
 
 
 app.use((err, req, res, next) => {

@@ -2,20 +2,27 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/authContext'; 
+import {fetchUser, getId, fetchUserFinacials} from '../services/userServices'; 
+import { fetchInvestment } from '../services/investmentServices';
 
-// --- Mock API Service Functions (Replace with actual service calls) ---
-// These should ideally live in src/services/investmentService.js
 const fetchUserInvestments = async () => {
-  console.log('Fetching investments...');
-  // Example: const response = await apiClient.get('/api/investments');
-  // return response.data;
-  // Mock data for draft:
-  await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network delay
-  return [
-    { _id: 'inv1', type: 'Stock', symbol: 'AAPL', quantity: 10, purchasePrice: 150 },
-    { _id: 'inv2', type: 'Crypto', symbol: 'BTC', quantity: 0.1, purchasePrice: 40000 },
-    { _id: 'inv3', type: 'Bond', symbol: 'US-TBond', quantity: 5, purchasePrice: 995 },
-  ];
+  let userId = await getId(); // Fetch user data from your API
+  let user = await fetchUser(userId)
+    if (!user.userFinancialId) {
+        window.location.href = '/setup-financial-plan';
+        return [];
+    }
+  let finances = await fetchUserFinacials(user.userFinancialId)
+  let investments = finances.investments || []; // Ensure it's an array
+// Fetch full investment details for each investment ID
+if (!investments || investments.length === 0) {
+    return []; // Return empty array if no investments found
+}
+const fullInvestments = await Promise.all(investments.map(async (inv) => {
+    const investmentDetails = await fetchInvestment(inv.id);
+    return { ...inv, ...investmentDetails };
+}));
+    return fullInvestments;
 };
 
 const addInvestmentAPI = async (investmentData) => {

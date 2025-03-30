@@ -18,7 +18,7 @@ export const checkAuth = (req, res, next) => {
 
     const decodedToken = jwt.verify(token, secretKey);
 
-    req.userData = { userId: decodedToken.userId, email: decodedToken.email };
+    req.userData = { userId: decodedToken._id, email: decodedToken.email };
 
 
     next();
