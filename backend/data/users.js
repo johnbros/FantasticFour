@@ -1,7 +1,6 @@
 import { ObjectId } from "mongodb";
 import { users } from "../config/mongoCollections.js";
 import bcrypt from "bcrypt";
-import jwt from 'jsonwebtoken';
 import validation from "../validation.js";
 
 const saltRounds = 11;
@@ -41,6 +40,9 @@ const exportedMethods = {
     };
 
     const userCollection = await users();
+
+    const emailCheck = await userCollection.findOne({ email });
+    if (emailCheck) throw "Email already exists";
     
     const insertInfo = await userCollection.insertOne(newUser);
     if (!insertInfo.acknowledged || !insertInfo.insertedId)
@@ -59,9 +61,6 @@ const exportedMethods = {
     async loginUser(email, password){
     email = validation.checkEmail(email, "email");
     password = validation.checkPassword(password);
-
-    const userCollection = await users();
-    const user = await userCollection.findOne({ email });
 
     if (!user) throw "Either the username or password is invalid";
     let match = await bcrypt.compare(password, user.password);
