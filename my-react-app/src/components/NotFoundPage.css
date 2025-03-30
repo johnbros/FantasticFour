@@ -16,6 +16,25 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+.not-found-duck {
+    width: 200px;
+    height: auto;
+    margin-bottom: 2rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
 .not-found-title {
     font-size: 8rem;
     font-weight: 700;
@@ -71,5 +90,9 @@
 
     .not-found-content {
         padding: 1.5rem;
+    }
+
+    .not-found-duck {
+        width: 150px;
     }
 } 

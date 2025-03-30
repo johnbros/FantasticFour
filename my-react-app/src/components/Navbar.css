@@ -18,6 +18,22 @@
     font-size: 1.5rem;
     font-weight: 600;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-logo-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(255, 0, 130, 0.5));
+    transition: transform 0.3s ease;
+}
+
+.nav-logo:hover .nav-logo-img {
+    transform: scale(1.1) rotate(10deg);
+    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.8));
 }
 
 .nav-links {
