@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { isValidEmail, isValidPassword } from "../src/helpers/authHelpers";
 import './Login.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../src/context/authContext';
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -12,7 +13,10 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const { login } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,8 +36,14 @@ const Login = () => {
       if (loginUser.status !== 200) {
         throw loginUser.data.error;
       }
+      if (loginUser.data && loginUser.data.token && loginUser.data.payload) {
+        login(loginUser.data.token, loginUser.data.payload);
+        navigate(from, { replace: true });
+      }else {
+        console.error("Login response missing token or user data:", loginUser.data);
+        setError('Login failed: Invalid response from server.');
 
-      navigate('/');
+      }
       setLoading(false);
     } catch (e) {
       console.log(e);
