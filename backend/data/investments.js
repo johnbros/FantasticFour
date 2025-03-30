@@ -17,7 +17,6 @@ const exportedMethods = {
 
   async addInvestment(userId, userFinancialId, investmentType) {
     userId = validation.checkId(userId, "User Id");
-    console.log(userFinancialId)
     userFinancialId = validation.checkId(userFinancialId, "Financial Id");
     investmentType = validation.checkString(investmentType, "investment type");
     // TODO; // dateInvested = validation.checkDateInvested(dateInvested)
