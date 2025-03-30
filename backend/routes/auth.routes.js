@@ -15,6 +15,7 @@ router.post('/', async (req, res) => {
         lastName = validation.checkName(lastName, "lastName");
         email = validation.checkEmail(email, "email");
         password = validation.checkPassword(password);
+        await validation.checkForDuplicateEmail(email);
     } catch (error) {
         return res.status(400).json({ error: error.message });
     }
@@ -44,6 +45,7 @@ router.post('/login', async (req, res) => {
         if( error.message === "Either the username or password is invalid") {
             return res.status(401).json({ error: error.message });
         }
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 });

@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { users } from "./config/mongoCollections.js";
 
 const exportedMethods = {
   checkString(strVal, varName) {
@@ -33,12 +34,12 @@ const exportedMethods = {
   },
 
   checkName(strVal, valName) {
-    strVal = this.checkString(strVal, varName);
+    strVal = this.checkString(strVal, valName);
     if (strVal.length < 5 || strVal.length > 25)
-      throw `the ${varName} ${strVal} is not between 5 and 25 characters`;
+      throw `the ${valName} ${strVal} is not between 5 and 25 characters`;
     let re = /^(?=.*[a-zA-Z])[a-zA-Z\s.'-]+$/;
     if (!re.test(strVal)) {
-      throw `${varName} must only contain letters and spaces with the exception of apostrophes, hyphens, and periods`;
+      throw `${valName} must only contain letters and spaces with the exception of apostrophes, hyphens, and periods`;
     }
     return strVal;
   },
@@ -63,13 +64,30 @@ const exportedMethods = {
   },
 
   //TODO, //email validation
-  checkEmail(email){},
+  checkEmail(email){
+    if (!email) throw `Email is required`;
+
+    if (typeof email !== "string" || email.trim() === "")
+      throw `Email must be a string and not empty`;
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      throw `Invalid email address`;
+
+    return email;
+  },
 
   checkPercentage(percentage) {
     percentage = this.checkNum(percentage, "Percentage");
     if (percentage < 0 || percentage > 100)
       throw `Percentage is not between 0 and 100`;
     return percentage;
+},
+
+  async checkForDuplicateEmail(email) {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ email });
+    if (user) throw `Email already in use`;
+    return email;
   }
 
 };

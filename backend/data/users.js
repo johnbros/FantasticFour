@@ -49,7 +49,7 @@ export async function signUpUser(firstName, lastName, email, password){
         firstName,
         lastName,
         email,
-        userFinancialId,
+        userFinancialId: null,
         createdAt: new Date(),
     };
     return result;
