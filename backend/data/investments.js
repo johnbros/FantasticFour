@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { investments, subInvestments } from "../config/mongoCollections.js";
+import { investments, subInvestments, userFinancials } from "../config/mongoCollections.js";
 import userFinancial from "./userfinancials.js";
 import validation from "../validation.js";
 
@@ -14,30 +14,28 @@ const exportedMethods = {
     return investment;
   },
 
-  async addInvestment(userId, investmentType) {
-    userId = validation.checkId(userId);
-    investmentType = validation.checkString(investmentType);
-    // totalValue = validation.checkNum(totalValue);
-    // TODO; //calculate investmentPercentage based on totalValue and investmentType
-    // investmentPercentage = validation.checkPercentage(investmentPercentage);
+  async addInvestment(userFinancials, investmentType, value, dateInvested) {
+    userFinancials = validation.checkId(userInvestmentId, "user Id");
+    investmentType = validation.checkString(investmentType, "investment type");
+    value = validation.checkNum(value, "investment value");
+    // TODO; // dateInvested = validation.checkDateInvested(dateInvested)
 
     const newInvestment = {
       userId,
       investmentType,
-    //   totalValue: 0,
-    //   investmentPercentage: 0,
-      dateInvested: new Date(),
+      value,
+      dateInvested,
       subInvestments: [],
     };
-
 
     const investmentCollection = await investments();
     const insertInfo = await investmentCollection.insertOne(newInvestment);
     const newId = insertInfo.insertedId;
-    const updatedFinancials = await investmentCollection.findOneAndUpdate(
-            { _id: new ObjectId(userId) },
-            { $push: { investments: insertInfo.insertedId } },
-            { returnDocument: "after" }
+    const userFinancialsCollection = await userFinancials();
+    const updatedFinancials = await userFinancialsCollection.findOneAndUpdate(
+      { _id: new ObjectId(userId) },
+      { $push: { investments: insertInfo.insertedId } },
+      { returnDocument: "after" }
     );
     return await this.getInvestmentById(newId.toString());
   },
@@ -53,10 +51,10 @@ const exportedMethods = {
       updatedInvestmentData.investmentType = validation.checkString(
         updatedInvestment.investmentType
       );
-    // if (updatedInvestment.totalValue)
-    //   updatedInvestmentData.totalValue = validation.checkNum(
-    //     updatedInvestment.totalValue
-    //   );
+    if (updatedInvestment.value)
+      updatedInvestmentData.value = validation.checkNum(
+        updatedInvestment.value
+      );
     if (updatedInvestment.dateInvested) TODO; //implement checkDateInvested in validation.js
     updatedInvestmentData.dateInvested = validation.checkDateInvested(
       updatedInvestment.dateInvested
@@ -91,15 +89,15 @@ const exportedMethods = {
     });
     if (!investment) throw "Investment not found";
     const subInvestmentCollection = await subInvestments();
-    let totalValue = 0;
+    let value = 0;
     for (const subInvestmentId of investment.subInvestments) {
       const subInvestment = await subInvestmentCollection.findOne({
         _id: new ObjectId(subInvestmentId),
       });
       if (!subInvestment) throw "Sub investment not found";
-      totalValue += subInvestment.value;
+      value += subInvestment.value;
     }
-    return totalValue;
+    return value;
   },
 };
 
