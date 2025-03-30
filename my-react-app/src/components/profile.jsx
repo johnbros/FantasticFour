@@ -3,13 +3,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/authContext'; 
 import {fetchUser, getId, fetchUserFinacials} from '../services/userServices'; 
-import { fetchInvestment } from '../services/investmentServices';
+import { fetchInvestment, createInvestment } from '../services/investmentServices';
 
 const fetchUserInvestments = async () => {
-  let userId = await getId(); // Fetch user data from your API
-  console.log('User ID:', userId);
+  let userId = await getId();
   let user = await fetchUser(userId)
-  console.log('User:', user);
     if (!user.userFinancialId) {
         window.location.href = '/setup-financial-plan';
         return [];
@@ -79,7 +77,7 @@ const InvestmentForm = ({ initialData = { category: '', totalValue: '' }, onSubm
       {/* Add more input fields based on your investment structure */}
       <div>
         <label>Category:</label>
-        <input name="" value={formData.type} onChange={handleChange} required disabled={isSaving} />
+        <input name="category" value={formData.category} onChange={handleChange} required disabled={isSaving} />
       </div>
       <button type="submit" disabled={isSaving}>{isSaving ? 'Saving...' : 'Save'}</button>
       {onCancel && <button type="button" onClick={onCancel} disabled={isSaving}>Cancel</button>}
@@ -127,9 +125,9 @@ function Profile() {
     setIsSaving(true);
     setError(null);
     try {
-      // Replace with actual API call
-      const addedInvestment = await addInvestmentAPI(newInvestmentData);
-      setInvestments(prev => [...prev, addedInvestment]); // Add to list
+      // Extract just the category name and pass it to createInvestment
+      const categoryName = newInvestmentData.category;
+      const addedInvestment = await createInvestment(categoryName);
       setIsAdding(false); // Close add form
     } catch (err) {
       console.error("Failed to add investment:", err);
@@ -231,9 +229,7 @@ function Profile() {
                 // --- Display Data ---
                 <div>
                   <p><strong>Category:</strong> {inv.category}</p>
-                  <p><strong>Symbol:</strong> {inv.symbol}</p>
-                  <p><strong>Quantity:</strong> {inv.quantity}</p>
-                  <p><strong>Purchase Price:</strong> ${inv.purchasePrice?.toFixed(2)}</p> {/* Example formatting */}
+                  <p><strong>Total Value:</strong> ${inv.purchasePrice?.toFixed(2)}</p> {/* Example formatting */}
                   <button onClick={() => setEditingInvestmentId(inv._id)} disabled={isSaving || editingInvestmentId}>Edit</button>
                   <button onClick={() => handleDelete(inv._id)} disabled={isSaving || editingInvestmentId} style={{ marginLeft: '10px', color: 'red' }}>Delete</button>
                 </div>

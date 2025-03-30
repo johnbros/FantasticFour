@@ -1,13 +1,14 @@
 import { ObjectId } from "mongodb";
 import { investments, subInvestments } from "../config/mongoCollections.js";
 import userFinancial from "./userfinancials.js";
+import validation from "../validation.js";
 
 const exportedMethods = {
   async getInvestmentById(id) {
     id = validation.checkId(id, "Investment Id");
     const investmentCollection = await investments();
     const investment = await investmentCollection.findOne({
-      _id: ObjectId(id),
+      _id: new ObjectId(id),
     });
     if (!investment) throw "Investment not found";
     return investment;
@@ -33,7 +34,7 @@ const exportedMethods = {
     const investmentCollection = await investments();
     const insertInfo = await investmentCollection.insertOne(newInvestment);
     const newId = insertInfo.insertedId;
-    const updatedFinancials = await userFinancial.findOneAndUpdate(
+    const updatedFinancials = await investmentCollection.findOneAndUpdate(
             { _id: new ObjectId(userId) },
             { $push: { investments: insertInfo.insertedId } },
             { returnDocument: "after" }

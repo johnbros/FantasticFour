@@ -19,7 +19,7 @@ export const fetchInvestment = async (investmentId) => {
 
 export const createInvestment = async (investmentCategory) => {
     try {
-        const response = await axios.post(`${apiUrl}/api/investments`, investmentCategory, { 
+        const response = await axios.post(`${apiUrl}/api/investments`, {investmentCategory}, { 
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
