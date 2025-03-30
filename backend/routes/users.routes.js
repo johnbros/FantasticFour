@@ -3,6 +3,7 @@ import express from 'express';
 import { checkAuth } from '../middleware/auth.middleware.js';
 import userData from '../data/users.js';
 import userFinancials from '../data/userfinancials.js';
+import validation from '../validation.js';
 
 
 const router = express.Router();
@@ -28,13 +29,14 @@ router.get('/:id', checkAuth, async (req, res) => {
         id = validation.checkId(id, "User Id");
 
     } catch (error) {
-        return res.status(400).json({ error: error.message });
+        console.log(error);
+        return res.status(600).json({ error: error.message });
     }
     try {
         if(loggedInUserId !== id) {
             return res.status(403).json({ error: 'You are not authorized to access this user' });
         }
-        const user = await userData.getUser(id);
+        const user = await userData.getUserById(id);
         res.status(200).json(user);
     } catch (error) {
         console.log(error);

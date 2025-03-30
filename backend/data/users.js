@@ -8,20 +8,20 @@ const saltRounds = 11;
 
 const exportedMethods = {
     async  getUserById(id){
-    id = validation.checkId(id, "User Id");
-    const userCollection = await users();
-    const user = await userCollection.findOne({ _id: ObjectId(id) });
-    if (!user) throw "User not found";
-    const result = {
-        _id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        userFinancialId: user.userFinancialId,
-        createdAt: user.createdAt,  
-    };
-    return result;
-},
+        id = validation.checkId(id, "User Id");
+        const userCollection = await users();
+        const user = await userCollection.findOne({ _id: new ObjectId(id) });
+        if (!user) throw "User not found";
+        const result = {
+            _id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            userFinancialId: user.userFinancialId,
+            createdAt: user.createdAt,  
+        };
+        return result;
+    },
 
     async signUpUser(firstName, lastName, email, password){
     firstName = validation.checkName(firstName, "firstName");
