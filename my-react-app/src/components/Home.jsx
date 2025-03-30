@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
@@ -8,6 +8,8 @@ const Home = () => {
     useEffect(() => {
         setIsVisible(true);
     }, []);
+
+    const navigate = useNavigate();
 
     return (
         <div className="home-container">
@@ -46,7 +48,7 @@ const Home = () => {
                         <h1 className="hero-title">Welcome to Duck Finance</h1>
                     </div>
                     <p className="hero-subtitle">
-                        Your one-stop destination for all things duck-related
+                       Track your investments 
                     </p>
                     <Link to="/signup" className="cta-button">
                         Get Started
@@ -57,28 +59,23 @@ const Home = () => {
             {/* Features Section */}
             <section className="features-section">
                 <div className="features-grid">
-                    <div className="feature-card">
-                        <h3 className="feature-title">Track Ducks</h3>
+                    <div className="feature-card" onClick={() => navigate('/dashboard')}>
+                        <h3 className="feature-title">Track Investments</h3>
                         <p className="feature-description">
-                            Keep track of your favorite ducks and their activities in real-time
+                            Keep track of your favorite investments and their activities 
                         </p>
                     </div>
-                    <div className="feature-card">
-                        <h3 className="feature-title">Share Photos</h3>
-                        <p className="feature-description">
-                            Share your amazing duck photos with our growing community
-                        </p>
-                    </div>
-                    <div className="feature-card">
+                        <div className="feature-card" onClick={() => navigate('/about')}>
                         <h3 className="feature-title">Learn More</h3>
                         <p className="feature-description">
-                            Discover fascinating facts about different duck species worldwide
+                            Discover fascinating facts about your different investments
                         </p>
                     </div>
-                    <div className="feature-card">
-                        <h3 className="feature-title">Connect</h3>
+                    <div className="feature-card" onClick={() => navigate('/contact')}>
+                        <h3 className="feature-title">Contact Us</h3>
                         <p className="feature-description">
-                            Join a vibrant community of duck enthusiasts and share experiences
+                            Contact us for more information
+
                         </p>
                     </div>
                 </div>
