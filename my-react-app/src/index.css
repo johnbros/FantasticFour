@@ -19,6 +19,12 @@ html, body {
     background-color: #1a1a1a;
 }
 
+.main-content {
+    padding-top: 80px; /* Adjust this value based on your navbar height */
+    min-height: calc(100vh - 80px);
+    width: 100%;
+}
+
 /* :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

@@ -18,25 +18,25 @@ function App() {
   return (
     <>
       <Navbar isLoggedIn={isAuthenticated} />
-      <Routes>
+      <div className="main-content">
+        <Routes>
+          {/* <Navbar isLoggedIn={isAuthenticated} /> */}
 
-        {/* <Navbar isLoggedIn={isAuthenticated} /> */}
+          <Route element={<UnprotectedRoute />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/about" element={<About />} />
+          </Route>
 
+          <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/logout" element={<Logout />} />
+          </Route>
 
-        <Route element={<UnprotectedRoute />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/about" element={<About />} />
-        </Route>
-
-        <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/logout" element={<Logout />} />
-        </Route>
-
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
     </>
   )
 }
