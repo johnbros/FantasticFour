@@ -68,11 +68,17 @@ const exportedMethods = {
       await subInvestmentData.removeSubInvestment(subInvestmentId);
     }
     const userCollection = await users();
-    await userCollection.findOneAndUpdate(
-      { _id: new ObjectId(deletionInfo.userId) },
-      { $pull: { investments: deletionInfo._id } },
-      { returnDocument: "after" }
-    );
+    const checkUser = await userCollection.findOne({
+      _id: new ObjectId(deletionInfo.userId),
+    });
+    if (checkUser) {
+      await userCollection.findOneAndUpdate(
+        { _id: new ObjectId(deletionInfo.userId) },
+        { $pull: { investments: deletionInfo._id } },
+        { returnDocument: "after" }
+      );
+    }
+    
     return { ...deletionInfo, deleted: true };
   },
 

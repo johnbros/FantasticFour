@@ -24,7 +24,7 @@ const exportedMethods = {
         if (!investmentsInfo) throw "Investment not found";
 
         const newSubInvestment = {
-            investmentId: new ObjectId(investmentId),
+            investmentId,
             name,
             value,
             dateInvested: new Date(),
@@ -70,7 +70,19 @@ const exportedMethods = {
             _id: new ObjectId(id),
           });
           if (!deletionInfo) throw `Could not delete subinvestment with id of ${id}`;
+          const investmentCollection = await investments();
+            const checkInvestment = await investmentCollection.findOne({
+                _id: new ObjectId(deletionInfo.investmentId),
+            });
+            if (checkInvestment) {
+                await investmentCollection.findOneAndUpdate(
+                    { _id: new ObjectId(deletionInfo.investmentId) },
+                    { $pull: { subInvestments: deletionInfo._id } },
+                    { returnDocument: "after" }
+                );
+            }   
           return { ...deletionInfo, deleted: true };
+
     },
 
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
-import { getId, fetchUser, fetchUserFinacials } from '../services/userServices';
+import { getId, fetchUser } from '../services/userServices';
 import { fetchInvestment } from '../services/investmentServices';
 
 const Dashboard = () => {
@@ -23,14 +23,13 @@ const Dashboard = () => {
         let userId = await getId();
         let user = await fetchUser(userId);
         
-        if (!user.userFinancialId) {
+        if (!userId) {
           setInvestments([]);
           setLoading(false);
           return;
         }
         
-        let userFinancials = await fetchUserFinacials(user.userFinancialId);
-        let investments = userFinancials.investments || [];
+        let investments = user.investments || [];
         
         if (investments.length === 0) {
           setInvestments([]);
@@ -131,4 +130,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

@@ -2,7 +2,6 @@ import * as index from "./data/index.js"; // ✅ Correct way
 import { dbConnection, closeConnection } from "./config/mongoConnection.js";
 import users from "./data/users.js";
 import investments from "./data/investments.js";
-import userFinancials from "./data/userfinancials.js";
 import subInvestments from "./data/subInvestments.js";
 import { ObjectId } from "mongodb";
 
@@ -14,7 +13,6 @@ const db = await dbConnection();
 await db.dropDatabase();
 const userCollection = db.collection("users");
 const investmentCollection = db.collection("investments");
-const userFinancialsCollection = db.collection("userFinancials");
 const subInvestmentCollection = db.collection("subInvestments");
 
 // Function to add a user to the database
@@ -127,19 +125,20 @@ const everythingelse = async () => {
     //   investment2._id
     // );
 
-    // const delete2 = await users.removeUser(
-    //   user._id
-    // );
-
     const updateSubInvestment = await subInvestments.updateSubInvestment(
       subInvestment2._id,
       { name: "Updated SubInvestment", value: 1500 }
     );
 
-    const total = await users.totalInvestment(user._id);
-    console.log("Total investment:", total);
-    const total2 = await investments.totalSubInvestment(investment1._id);
-    console.log("Total sub investment:", total2);
+    const delete2 = await investments.removeInvestment(
+      investment1._id.toString()
+    );
+
+    
+    // const total = await users.totalInvestment(user._id);
+    // console.log("Total investment:", total);
+    // const total2 = await investments.totalSubInvestment(investment1._id);
+    // console.log("Total sub investment:", total2);
     // console.log("User removed:", delete2);
   } catch (error) {
     console.error("Error adding user:", error);
