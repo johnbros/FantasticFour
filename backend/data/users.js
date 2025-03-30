@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 
 const saltRounds = 11;
 
+
 const exportedMethods = {
     async  getUserById(id){
         id = validation.checkId(id, "User Id");
