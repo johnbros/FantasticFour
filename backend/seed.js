@@ -71,9 +71,9 @@ const usersStuff = async () => {
 };
 
 const everythingelse = async () => {
-  const user = await users.signUpUser("someone", "another", "asfa@assdf.com", "Password123!");
-  const finsForUser = await userFinancials.addUserFinancials(user._id, 1, 10000);
-
+  let user = await users.signUpUser("someone", "another", "asfa@assdf.com", "Password123!");
+  user = await users.updateUser(user._id, { riskTolerance: 4 });
+ 
   try {
     const investmentinfo1 = {
       investmentType: "Stock",
@@ -89,14 +89,14 @@ const everythingelse = async () => {
 
     // Add user to the users collection
     const investment1 = await investments.addInvestment(
-      finsForUser._id,
+      user._id,
       investmentinfo1.investmentType,
       investmentinfo1.totalValue,
       investmentinfo1.dateInvested
     );
 
     const investment2 = await investments.addInvestment(
-      finsForUser._id,
+      user._id,
       investmentinfo2.investmentType,
       investmentinfo2.totalValue,
       investmentinfo2.dateInvested
@@ -136,7 +136,7 @@ const everythingelse = async () => {
       { name: "Updated SubInvestment", value: 1500 }
     );
 
-    const total = await userFinancials.totalInvestment(finsForUser._id);
+    const total = await users.totalInvestment(user._id);
     console.log("Total investment:", total);
     const total2 = await investments.totalSubInvestment(investment1._id);
     console.log("Total sub investment:", total2);

@@ -98,7 +98,6 @@ function InvestmentPreferencesPage() {
     try {
       const preferencesToSave = {
         riskTolerance: riskNum,
-        investmentAmount: amountNum,
       };
       // --- Replace with actual API call ---
       const userId = await getId();

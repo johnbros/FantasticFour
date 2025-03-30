@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/authContext'; 
-import {fetchUser, getId, fetchUserFinacials} from '../services/userServices'; 
+import {fetchUser, getId} from '../services/userServices'; 
 import { fetchInvestment, createInvestment, deleteInvestment } from '../services/investmentServices';
 
 const fetchUserInvestments = async () => {
@@ -12,8 +12,7 @@ const fetchUserInvestments = async () => {
         window.location.href = '/setup-financial-plan';
         return [];
     }
-  let finances = await fetchUserFinacials(user.userFinancialId)
-  let investments = finances.investments || []; // Ensure it's an array
+  let investments = user.investments || []; // Ensure it's an array
 // Fetch full investment details for each investment ID
 if (!investments || investments.length === 0) {
     return []; // Return empty array if no investments found

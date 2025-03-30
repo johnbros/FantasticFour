@@ -1,12 +1,11 @@
 import { ObjectId } from "mongodb";
-import { users } from "../config/mongoCollections.js";
-import userFinancialData from "./userfinancials.js";
+import { investments, users } from "../config/mongoCollections.js";
+import investmentData from "./investments.js";
 import bcrypt from "bcrypt";
 import validation from "../validation.js";
 import jwt from "jsonwebtoken";
 
 const saltRounds = 11;
-
 
 const exportedMethods = {
   async getUserById(id) {
@@ -19,7 +18,8 @@ const exportedMethods = {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      userFinancialId: user.userFinancialId,
+      riskTolerance: user.riskTolerance,
+      investments: user.investments,
       createdAt: user.createdAt,
     };
     return result;
@@ -38,7 +38,8 @@ const exportedMethods = {
       lastName,
       email,
       password: hash,
-      userFinancialId: null,
+      riskTolerance: null,
+      investments: [],
       createdAt: new Date(),
     };
 
@@ -55,7 +56,8 @@ const exportedMethods = {
       firstName,
       lastName,
       email,
-      userFinancialId: null,
+      riskTolerance: null,
+      investments: [],
       createdAt: new Date(),
     };
     return result;
@@ -77,7 +79,8 @@ const exportedMethods = {
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
-      userFinancialId: user.userFinancialId,
+      riskTolerance: user.riskTolerance,
+      investments: user.investments,
       createdAt: user.createdAt,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -91,6 +94,61 @@ const exportedMethods = {
     };
   },
 
+  async updateUser(id, updatedUser) {
+    id = validation.checkId(id, "User");
+    const updatedUserData = {};
+    if (updatedUser.firstName)
+      updatedUserData.firstName = validation.checkName(
+        updatedUser.firstName,
+        "firstName"
+      );
+    if (updatedUser.lastName)
+      updatedUserData.lastName = validation.checkName(
+        updatedUser.lastName,
+        "lastName"
+      );
+    if (updatedUser.email)
+      updatedUserData.email = validation.checkEmail(
+        updatedUser.email,
+        "email"
+      );
+    if (updatedUser.password) {
+        updatedUserData.password = validation.checkPassword(
+            updatedUser.password,
+            "password"
+        );
+        const hash = await bcrypt.hash(updatedUserData.password, saltRounds);
+        updatedUserData.password = hash;
+        }
+    if (updatedUser.riskTolerance) {
+      updatedUserData.riskTolerance = validation.checkRiskTolerance(
+        updatedUser.riskTolerance,
+        "risk tolerance"
+      );
+    }
+    
+
+    const userCollection = await users();
+    const updatedInfo = await userCollection.findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: updatedUserData },
+      { returnDocument: "after" }
+
+    );
+
+    if (!updatedInfo) throw "Could not update user successfully";
+    const result = {
+      _id: updatedInfo._id,
+      firstName: updatedInfo.firstName,
+      lastName: updatedInfo.lastName,
+      email: updatedInfo.email,
+      riskTolerance: updatedInfo.riskTolerance,
+      investments: updatedInfo.investments,
+      createdAt: updatedInfo.createdAt,
+    };
+    return result;
+  },
+
   async removeUser(id) {
     id = validation.checkId(id, "User Id");
     const userCollection = await users();
@@ -98,12 +156,26 @@ const exportedMethods = {
       _id: new ObjectId(id),
     });
     if (!deletionInfo) throw `Could not delete user with id of ${id}`;
-    if (deletionInfo.userFinancialId) {
-      await userFinancialData.removeUserFinancials(
-        deletionInfo.userFinancialId
-      );
+    for (const investmentId of deletionInfo.investments) {
+      await investmentData.removeInvestment(investmentId);
     }
     return { ...deletionInfo, deleted: true };
+  },
+
+  async totalInvestment(userId) {
+    const user = await this.getUserById(userId);
+    if (user.investments.length === 0) return 0;
+    const investmentCollection = await investments();
+    let totalValue = 0;
+    for (const investmentId of user.investments) {
+      const investment = await investmentCollection.findOne({
+        _id: new ObjectId(investmentId),
+      });
+      if (!investment) throw "Investment not found";
+      const value = await investmentData.totalSubInvestment(investmentId);
+      totalValue += value;
+    }
+    return totalValue;
   },
 };
 export default exportedMethods;

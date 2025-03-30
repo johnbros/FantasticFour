@@ -63,7 +63,7 @@ router.post('/', checkAuth, async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        investmentId = await investments.addInvestment(loggedInUserId, user.userFinancialId, investmentType);
+        investmentId = await investments.addInvestment(loggedInUserId, investmentType);
         if (!investmentId) {
             return res.status(500).json({ error: 'Error inserting investment id' });
         }

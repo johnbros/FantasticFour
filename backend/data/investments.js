@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import {
   investments,
   subInvestments,
-  userFinancials,
+  users,
 } from "../config/mongoCollections.js";
 import subInvestmentData from "./subInvestments.js";
 import validation from "../validation.js";
@@ -18,15 +18,13 @@ const exportedMethods = {
     return investment;
   },
 
-  async addInvestment(userFinId, investmentType, value) {
-    userFinId = validation.checkId(userFinId, "user financial");
+  async addInvestment(userId, investmentType) {
+    userId = validation.checkId(userId, "user");
     investmentType = validation.checkString(investmentType, "investment type");
-    value = validation.checkNum(value, "investment value");
 
     const newInvestment = {
-      userFinId,
+      userId,
       investmentType,
-      value,
       dateInvested: new Date(),
       subInvestments: [],
     };
@@ -34,13 +32,13 @@ const exportedMethods = {
     const investmentCollection = await investments();
     const insertInfo = await investmentCollection.insertOne(newInvestment);
     const newId = insertInfo.insertedId;
-    const userFinancialsCollection = await userFinancials();
-    await userFinancialsCollection.findOneAndUpdate(
-      { _id: new ObjectId(userFinId) },
+    const userCollection = await users();
+    await userCollection.findOneAndUpdate(
+      { _id: new ObjectId(userId) },
       { $push: { investments: insertInfo.insertedId } },
       { returnDocument: "after" }
     );
-    return await this.getInvestmentById(newId.toString());
+    return await this.getInvestmentById(newId);
   },
 
   async updateInvestment(id, updatedInvestment) {
@@ -50,18 +48,10 @@ const exportedMethods = {
       updatedInvestmentData.investmentType = validation.checkString(
         updatedInvestment.investmentType
       );
-    if (updatedInvestment.value)
-      updatedInvestmentData.value = validation.checkNum(
-        updatedInvestment.value
-      );
-    // if (updatedInvestment.dateInvested) TODO; //implement checkDateInvested in validation.js
-    // updatedInvestmentData.dateInvested = validation.checkDateInvested(
-    //   updatedInvestment.dateInvested
-    // );
 
     const investmentCollection = await investments();
     let newInvestment = await investmentCollection.findOneAndUpdate(
-      { _id: ObjectId(id) },
+      { _id: new ObjectId(id) },
       { $set: updatedInvestmentData },
       { returnDocument: "after" }
     );
@@ -74,17 +64,12 @@ const exportedMethods = {
       _id: new ObjectId(id),
     });
     if (!deletionInfo) throw `Could not delete investment with id of ${id}`;
-    // deletionInfo.subInvestments.forEach((subInvestmentId) => {
-    //   subInvestmentData.removeSubInvestment(subInvestmentId);
-    // });
     for (const subInvestmentId of deletionInfo.subInvestments) {
       await subInvestmentData.removeSubInvestment(subInvestmentId);
     }
-    // const user = await userData.getUserById(deletionInfo.userId);
-    // const userFinancialId = user.userFinancialId;
-    const userFinancialsCollection = await userFinancials();
-    await userFinancialsCollection.findOneAndUpdate(
-      { _id: new ObjectId(deletionInfo.userFinId) },
+    const userCollection = await users();
+    await userCollection.findOneAndUpdate(
+      { _id: new ObjectId(deletionInfo.userId) },
       { $pull: { investments: deletionInfo._id } },
       { returnDocument: "after" }
     );

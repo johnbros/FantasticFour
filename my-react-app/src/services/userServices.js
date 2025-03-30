@@ -31,19 +31,19 @@ export const fetchUser = async (userId) => {
     }
 }
 
-export const fetchUserFinacials = async (financialId) => {
-    try {
-            const response = await axios.get(`${apiUrl}/api/users/${financialId}/finacials`, { 
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                },
-            });
-            return response.data;
-        } catch (error) {
-            console.error(`Error fetching user ${financialId} finacials:`, error);
-            throw error;
-        }
-}
+// export const fetchUserFinacials = async (financialId) => {
+//     try {
+//             const response = await axios.get(`${apiUrl}/api/users/${financialId}/finacials`, { 
+//                 headers: {
+//                     Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+//                 },
+//             });
+//             return response.data;
+//         } catch (error) {
+//             console.error(`Error fetching user ${financialId} finacials:`, error);
+//             throw error;
+//         }
+// }
 
 export const postFinancialPreferences = async (userId, financialData) => {
     try {
