@@ -6,9 +6,12 @@ import Navbar from '../components/Navbar.jsx'
 import Signup from '../components/Signup.jsx'
 import Dashboard from '../components/Dashboard.jsx'
 import About from '../components/About.jsx'
-import ProtectedRoute from '../components/protectedRoute.jsx'
+import {ProtectedRoute,  UnprotectedRoute } from '../components/protectedRoute.jsx'
 import NotFoundPage from '../components/NotFoundPage.jsx'
 import { useAuth } from '../src/context/authContext.jsx'
+import Logout from '../components/Logout.jsx'
+
+
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -19,15 +22,17 @@ function App() {
 
         {/* <Navbar isLoggedIn={isAuthenticated} /> */}
 
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/about" element={<About />} />
-        
-        
+
+        <Route element={<UnprotectedRoute />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/about" element={<About />} />
+        </Route>
 
         <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/logout" element={<Logout />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

@@ -13,5 +13,15 @@ const ProtectedRoute = () => {
   return <Outlet />;
 
 };
+const UnprotectedRoute = () => {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
-export default ProtectedRoute;
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" state={{ from: location }} replace />;
+  }
+
+  return <Outlet />;
+}
+
+export { ProtectedRoute, UnprotectedRoute };

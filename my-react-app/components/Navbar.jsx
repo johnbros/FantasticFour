@@ -7,9 +7,12 @@ const Navbar = (props) => {
     if (props.isLoggedIn) {
         return (
             <nav className="navbar">
-                <Link to="/" className="nav-logo">
+                <Link to="/dashboard" className="nav-logo">
                     Duck Finance
                 </Link>
+                <div className="nav-links">
+                    <Link to="/logout">Logout</Link>
+                </div>
             </nav>
         );
     } else {
