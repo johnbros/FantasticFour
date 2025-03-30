@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchInvestment, addSubInvestment } from '../services/investmentServices';
+import { fetchInvestment, addSubInvestment, deleteSubInvestment, fetchSubInvestment } from '../services/investmentServices';
 
 function InvestmentDetails() {
   const { id } = useParams(); // Get investment ID from URL
@@ -15,7 +15,7 @@ function InvestmentDetails() {
   const [editingId, setEditingId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Fetch investment details and sub-investments
+  // Simplified loadInvestmentData function
   const loadInvestmentData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -24,9 +24,18 @@ function InvestmentDetails() {
       const investmentData = await fetchInvestment(id);
       setInvestment(investmentData);
       
-      // Assuming investmentData.subInvestments contains the array of sub-investments
-      // If you need to make a separate API call to get sub-investments, do that here
-      setSubInvestments(investmentData.subInvestments || []);
+      // Simply use the subInvestments that are already in the investment data
+      // No need to fetch each one individually 
+      if (investmentData.subInvestments && Array.isArray(investmentData.subInvestments)) {
+        const investments = investmentData.subInvestments.map(subInv => subInv._id);
+        const fullInvestments = await Promise.all(investments.map(async (inv) => {
+            const investmentDetails = await fetchSubInvestment(inv);
+                return { ...inv, ...investmentDetails };}));
+        setSubInvestments(fullInvestments);
+        
+      } else {
+        setSubInvestments([]);
+      }
     } catch (err) {
       console.error("Failed to fetch investment details:", err);
       setError("Failed to load investment details. Please try again.");
@@ -62,23 +71,6 @@ function InvestmentDetails() {
     }
   };
 
-  const handleUpdateSubInvestment = async (subId, updatedData) => {
-    setIsSaving(true);
-    try {
-      // Call your API to update a sub-investment
-      // const updatedSubInvestment = await updateSubInvestmentAPI(subId, updatedData);
-      
-      // Update state
-      // setSubInvestments(prev => prev.map(item => item._id === subId ? updatedSubInvestment : item));
-      setEditingId(null);
-    } catch (err) {
-      console.error("Failed to update sub-investment:", err);
-      setError("Failed to update investment item. Please try again.");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   const handleDeleteSubInvestment = async (subId) => {
     if (!window.confirm('Are you sure you want to delete this investment?')) {
       return;
@@ -86,11 +78,16 @@ function InvestmentDetails() {
     
     setIsSaving(true);
     try {
-      // Call your API to delete a sub-investment
-      // await deleteSubInvestmentAPI(subId);
+      // Call API to delete sub-investment
+      await deleteSubInvestment(subId);
       
-      // Update state
-      // setSubInvestments(prev => prev.filter(item => item._id !== subId));
+      // Update the state by removing the deleted item
+      setSubInvestments(prev => prev.filter(item => item._id !== subId));
+      
+      // If this was the last sub-investment, refresh the main investment data
+      if (subInvestments.length <= 1) {
+        await loadInvestmentData();
+      }
     } catch (err) {
       console.error("Failed to delete sub-investment:", err);
       setError("Failed to delete investment item. Please try again.");

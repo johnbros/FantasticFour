@@ -47,7 +47,6 @@ export const deleteInvestment = async (investmentId) => {
 
 export const addSubInvestment = async (investmentId, name, value) => {
     try {
-        // Match the actual route format in your backend
         const response = await axios.post(
             `${apiUrl}/api/investments/subInvestment/${investmentId}`, 
             { name, value }, 
@@ -61,6 +60,34 @@ export const addSubInvestment = async (investmentId, name, value) => {
         return response.data;
     } catch (error) {
         console.error(`Error adding sub-investment to investment ${investmentId}:`, error);
+        throw error;
+    }
+}
+
+export const deleteSubInvestment = async (subInvestmentId) => {
+    try {
+        const response = await axios.delete(`${apiUrl}/api/investments/subInvestment/${subInvestmentId}`, { 
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error deleting sub-investment ${subInvestmentId}:`, error);
+        throw error;
+    }
+}
+
+export const fetchSubInvestment = async (subInvestmentId) => {
+    try {
+        const response = await axios.get(`${apiUrl}/api/investments/subInvestment/${subInvestmentId}`, { 
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching sub-investment ${subInvestmentId}:`, error);
         throw error;
     }
 }

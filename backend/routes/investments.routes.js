@@ -138,5 +138,74 @@ router.post('/subInvestment/:investmentId', checkAuth, async (req, res) => {
 }
 );
 
+router.delete('/subInvestment/:id', checkAuth, async (req, res) => {
+    let { id } = req.params;
+    const loggedInUserId = req.userData.userId;
+    let subInvestment = null;
+
+    if (!id) {
+        return res.status(400).json({ error: 'Sub-investment ID is required' });
+    }
+    try {
+        id = validation.checkId(id, "Sub-investment Id");
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+    try {
+        subInvestment = await subInvestments.getSubInvestmentById(id);
+        if (!subInvestment) {
+            return res.status(404).json({ error: 'Sub-investment not found' });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: error.message });
+    }
+    if (subInvestment.userId !== loggedInUserId) {
+        return res.status(403).json({ error: 'You are not authorized to access this Sub-investment' });
+    }
+    try {
+        await subInvestments.removeSubInvestment(id);
+        res.status(200).json({ deletedCount: 1 });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+);
+
+router.get('/subInvestment/:id', checkAuth, async (req, res) => {
+    let { id } = req.params;
+    const loggedInUserId = req.userData.userId;
+    let subInvestment = null;
+
+    if (!id) {
+        return res.status(400).json({ error: 'Sub-investment ID is required' });
+    }
+    try {
+        id = validation.checkId(id, "Sub-investment Id");
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+    try {
+        subInvestment = await subInvestments.getSubInvestmentById(id);
+        if (!subInvestment) {
+            return res.status(404).json({ error: 'Sub-investment not found' });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: error.message });
+    }
+    if (subInvestment.userId !== loggedInUserId) {
+        return res.status(403).json({ error: 'You are not authorized to access this Sub-investment' });
+    }
+    try {
+        res.status(200).json(subInvestment);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+);
+
 export default router;
 
