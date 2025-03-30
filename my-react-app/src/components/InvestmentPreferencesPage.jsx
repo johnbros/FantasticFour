@@ -3,10 +3,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/authContext'; 
 import { postFinancialPreferences, getId } from '../services/userServices';
+import { useNavigate } from 'react-router-dom';
 
 // --- Mock API Service Functions (Replace with actual service calls) ---
 // These should ideally live in src/services/preferenceService.js or userService.js
 const fetchUserPreferences = async () => {
+
+
   console.log('Fetching preferences...');
   // Example: const response = await apiClient.get('/api/preferences'); // Or /api/users/me/preferences
   // return response.data;
@@ -28,7 +31,7 @@ const saveUserPreferences = async (preferences) => {
 
 function InvestmentPreferencesPage() {
   const { user } = useAuth(); // Get user context if needed (e.g., to confirm login)
-
+  const navigate = useNavigate();
   // --- State ---
   const [riskTolerance, setRiskTolerance] = useState(''); // Use string for select value initially
   const [investmentAmount, setInvestmentAmount] = useState('');
@@ -111,6 +114,8 @@ function InvestmentPreferencesPage() {
       // Consider showing more specific errors based on API response if available
     } finally {
       setIsSaving(false);
+      navigate('/dashboard');
+
     }
   };
 

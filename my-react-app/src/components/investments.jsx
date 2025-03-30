@@ -23,14 +23,22 @@ function InvestmentDetails() {
       // Fetch the main investment category
       const investmentData = await fetchInvestment(id);
       setInvestment(investmentData);
-      
+      console.log(investmentData);
+
       // Simply use the subInvestments that are already in the investment data
       // No need to fetch each one individually 
       if (investmentData.subInvestments && Array.isArray(investmentData.subInvestments)) {
-        const investments = investmentData.subInvestments.map(subInv => subInv._id);
+        const investments = investmentData.subInvestments;
+        console.log("Here");
+        console.log(investments);
+
         const fullInvestments = await Promise.all(investments.map(async (inv) => {
+          console.log(inv);
             const investmentDetails = await fetchSubInvestment(inv);
-                return { ...inv, ...investmentDetails };}));
+            console.log(investmentDetails);
+            return investmentDetails;
+        }));
+        console.log(fullInvestments);
         setSubInvestments(fullInvestments);
         
       } else {
@@ -70,6 +78,7 @@ function InvestmentDetails() {
       setIsSaving(false);
     }
   };
+
 
   const handleDeleteSubInvestment = async (subId) => {
     if (!window.confirm('Are you sure you want to delete this investment?')) {
@@ -200,6 +209,7 @@ function InvestmentDetails() {
         <p>You haven't added any specific investments to this category yet.</p>
       ) : (
         <ul style={{ listStyleType: 'none', padding: 0 }}>
+          {console.log(subInvestments)}
           {subInvestments.map(subInv => (
             <li key={subInv._id} style={{ 
               border: '1px solid #ddd', 
