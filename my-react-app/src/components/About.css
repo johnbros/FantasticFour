@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600&display=swap');
+
+.about-container {
+    background-image: url('https://yourbackgroundimageurl.com/background.jpg');
+    background-size: cover;
+    background-position: center;
+    animation: fadeInBackground 1.5s ease-in-out forwards;
+}
+
+h1, h2, p {
+    font-family: 'Oswald', sans-serif;
+}
+
+h1 {
+    animation: bounceIn 1s;
+}
+
+.title, .header-title {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.animated-title {
+    animation: pulse 2s infinite alternate;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.scroll-section {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideIn 1s forwards;
+    animation-delay: 0.3s;
+}
+
+.feature-item {
+    animation: flash 1s infinite alternate;
+    transition: transform 0.3s;
+}
+
+.feature-item:hover {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.animated-card {
+    animation: highlight 3s infinite alternate;
+}
+
+@keyframes fadeInBackground {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes flash {
+    0% { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+@keyframes highlight {
+    0% { box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
+    100% { box-shadow: 0 0 25px rgba(255, 255, 0, 1); }
+}
