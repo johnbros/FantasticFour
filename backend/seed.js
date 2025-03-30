@@ -71,7 +71,8 @@ const usersStuff = async () => {
 
 const everythingelse = async () => {
   const user = await users.signUpUser("someone", "another", "asfa@assdf.com", "Password123!");
-  const userFinancials = await userFinancials.addUserFinancials(user._id.toString(), 1, 10000);
+  const finsForUser = await userFinancials.addUserFinancials(user._id, 1, 10000);
+  console.log("User financials added:", finsForUser);
 
   try {
     const investmentinfo1 = {
@@ -88,14 +89,14 @@ const everythingelse = async () => {
 
     // Add user to the users collection
     const investment1 = await investments.addInvestment(
-      user._id.toString(),
+      finsForUser._id,
       investmentinfo1.investmentType,
       investmentinfo1.totalValue,
       investmentinfo1.dateInvested
     );
 
     const investment2 = await investments.addInvestment(
-      user._id.toString(),
+      finsForUser._id,
       investmentinfo2.investmentType,
       investmentinfo2.totalValue,
       investmentinfo2.dateInvested

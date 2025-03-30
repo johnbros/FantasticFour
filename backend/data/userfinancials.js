@@ -38,8 +38,14 @@ const exportedMethods = {
             { returnDocument: "after" }
         );
         if (!updatedUser) throw "Could not update user with financials";
-        insertInfo._id = insertInfo.toString();
-        return insertInfo;
+        const result = {
+            _id: insertInfo.insertedId,
+            userId: userId,
+            riskTolerance: riskTolerance,
+            investmentAmount: investmentAmount,
+            investments: [],
+        };
+        return result;
     },
 
     async removeUserFinancials(id) {

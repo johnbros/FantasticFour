@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { investments, subInvestments, userFinancials } from "../config/mongoCollections.js";
-import userFinancial from "./userfinancials.js";
+import subInvestmentData from "./subInvestments.js";
 import validation from "../validation.js";
 
 const exportedMethods = {
@@ -14,14 +14,14 @@ const exportedMethods = {
     return investment;
   },
 
-  async addInvestment(userFinancials, investmentType, value, dateInvested) {
-    userFinancials = validation.checkId(userInvestmentId, "user Id");
+  async addInvestment(userFinId, investmentType, value, dateInvested) {
+    userFinId = validation.checkId(userFinId, "user financials");
     investmentType = validation.checkString(investmentType, "investment type");
     value = validation.checkNum(value, "investment value");
     // TODO; // dateInvested = validation.checkDateInvested(dateInvested)
 
     const newInvestment = {
-      userId,
+      userFinId,
       investmentType,
       value,
       dateInvested,
@@ -33,7 +33,7 @@ const exportedMethods = {
     const newId = insertInfo.insertedId;
     const userFinancialsCollection = await userFinancials();
     const updatedFinancials = await userFinancialsCollection.findOneAndUpdate(
-      { _id: new ObjectId(userId) },
+      { _id: new ObjectId(userFinId) },
       { $push: { investments: insertInfo.insertedId } },
       { returnDocument: "after" }
     );
