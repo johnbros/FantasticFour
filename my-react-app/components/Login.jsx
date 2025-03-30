@@ -38,7 +38,10 @@ const Login = () => {
       }
       if (loginUser.data && loginUser.data.token && loginUser.data.payload) {
         login(loginUser.data.token, loginUser.data.payload);
+
         navigate(from, { replace: true });
+
+
       }else {
         console.error("Login response missing token or user data:", loginUser.data);
         setError('Login failed: Invalid response from server.');

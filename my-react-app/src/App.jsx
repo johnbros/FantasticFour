@@ -7,12 +7,14 @@ import Signup from '../components/Signup.jsx'
 import Dashboard from '../components/Dashboard.jsx'
 import About from '../components/About.jsx'
 import ProtectedRoute from '../components/protectedRoute.jsx'
+import NotFoundPage from '../components/NotFoundPage.jsx'
+import { useAuth } from '../src/context/authContext.jsx'
 
 function App() {
-  
+  const { isAuthenticated } = useAuth();
   return (
     <>
-      <Navbar />
+      <Navbar isLoggedIn={isAuthenticated} />
       <Routes>
 
         {/* <Navbar isLoggedIn={isAuthenticated} /> */}
@@ -27,6 +29,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   )
