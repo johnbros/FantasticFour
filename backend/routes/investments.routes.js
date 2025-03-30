@@ -75,5 +75,40 @@ router.post('/', checkAuth, async (req, res) => {
 }
 );
 
+router.delete('/:id', checkAuth, async (req, res) => {
+    let { id } = req.params;
+    const loggedInUserId = req.userData.userId;
+    let investment = null;
+
+    if (!id) {
+        return res.status(400).json({ error: 'Investment ID is required' });
+    }
+    try {
+        id = validation.checkId(id, "Investment Id");
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+    try {
+        investment = await investments.getInvestmentById(id);
+        if (!investment) {
+            return res.status(404).json({ error: 'Investment not found' });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: error.message });
+    }
+    if (investment.userId !== loggedInUserId) {
+        return res.status(403).json({ error: 'You are not authorized to access this Investment' });
+    }
+    try {
+        await investments.removeInvestment(id);
+        res.status(200).json({ deletedCount: 1 });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+);
+
 export default router;
 

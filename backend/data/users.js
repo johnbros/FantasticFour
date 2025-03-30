@@ -97,7 +97,7 @@ const exportedMethods = {
     const deletionInfo = await userCollection.findOneAndDelete({
       _id: new ObjectId(id),
     });
-    if (!deletionInfo) throw `Could not delete post with id of ${id}`;
+    if (!deletionInfo) throw `Could not delete user with id of ${id}`;
     if (deletionInfo.userFinancialId) {
       await userFinancialData.removeUserFinancials(
         deletionInfo.userFinancialId

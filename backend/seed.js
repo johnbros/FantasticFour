@@ -73,7 +73,6 @@ const usersStuff = async () => {
 const everythingelse = async () => {
   const user = await users.signUpUser("someone", "another", "asfa@assdf.com", "Password123!");
   const finsForUser = await userFinancials.addUserFinancials(user._id, 1, 10000);
-  console.log("User financials added:", finsForUser);
 
   try {
     const investmentinfo1 = {
@@ -106,7 +105,6 @@ const everythingelse = async () => {
     const getInvestmentById = await investments.getInvestmentById(
       investment1._id.toString()
     );
-    console.log("Investment checked:", getInvestmentById);
 
     const Subinvestment = await subInvestments.addSubInvestment(
       investment1._id,
@@ -119,14 +117,30 @@ const everythingelse = async () => {
       3000,
     );
 
+    const subInvestment3 = await subInvestments.addSubInvestment(
+      investment2._id,
+      "subInvestment again",
+      5000,
+    );
+
     // const delete2 = await investments.removeInvestment(
     //   investment2._id
     // );
 
-    const delete2 = await investments.removeInvestment(
-      investment1._id
+    // const delete2 = await users.removeUser(
+    //   user._id
+    // );
+
+    const updateSubInvestment = await subInvestments.updateSubInvestment(
+      subInvestment2._id,
+      { name: "Updated SubInvestment", value: 1500 }
     );
-    console.log("User removed:", delete2);
+
+    const total = await userFinancials.totalInvestment(finsForUser._id);
+    console.log("Total investment:", total);
+    const total2 = await investments.totalSubInvestment(investment1._id);
+    console.log("Total sub investment:", total2);
+    // console.log("User removed:", delete2);
   } catch (error) {
     console.error("Error adding user:", error);
   }

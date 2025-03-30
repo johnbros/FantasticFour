@@ -42,12 +42,34 @@ const exportedMethods = {
         return await this.getSubInvestmentById(insertInfo.insertedId.toString());
     },
 
+    async updateSubInvestment(id, updatedSubInvestment) {
+        id = validation.checkId(id, "Subinvestment");
+        
+        const updatedSubInvestmentData = {};
+
+        if (updatedSubInvestment.name) {
+            updatedSubInvestmentData.name = validation.checkString(updatedSubInvestment.name, "Subinvestment name");
+        }
+        if (updatedSubInvestment.value) {
+            updatedSubInvestmentData.value = validation.checkNum(updatedSubInvestment.value, "Subinvestment value");
+        }
+
+        const subInvestmentCollection = await subInvestments();
+        const updateInfo = await subInvestmentCollection.findOneAndUpdate(
+            { _id: new ObjectId(id) },
+            { $set: updatedSubInvestmentData },
+            { returnDocument: "after" }
+        );
+        if (!updateInfo) throw `Could not update subinvestment with id of ${id}`;
+        return await this.getSubInvestmentById(id);
+    },
+
     async removeSubInvestment(id) {
         const subInvestmentCollection = await subInvestments();
         const deletionInfo = await subInvestmentCollection.findOneAndDelete({
             _id: new ObjectId(id),
           });
-          if (!deletionInfo) throw `Could not delete post with id of ${id}`;
+          if (!deletionInfo) throw `Could not delete subinvestment with id of ${id}`;
           return { ...deletionInfo, deleted: true };
     },
 
