@@ -161,7 +161,7 @@ router.delete('/subInvestment/:id', checkAuth, async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
     if (subInvestment.userId !== loggedInUserId) {
-        return res.status(403).json({ error: 'You are not authorized to access this Sub-investment' });
+
     }
     try {
         await subInvestments.removeSubInvestment(id);
@@ -182,10 +182,13 @@ router.get('/subInvestment/:id', checkAuth, async (req, res) => {
         return res.status(400).json({ error: 'Sub-investment ID is required' });
     }
     try {
+        console.log(id);
         id = validation.checkId(id, "Sub-investment Id");
     } catch (error) {
+        console.log(error);
         return res.status(400).json({ error: error.message });
     }
+    console.log("Here5");
     try {
         subInvestment = await subInvestments.getSubInvestmentById(id);
         if (!subInvestment) {
@@ -196,7 +199,7 @@ router.get('/subInvestment/:id', checkAuth, async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
     if (subInvestment.userId !== loggedInUserId) {
-        return res.status(403).json({ error: 'You are not authorized to access this Sub-investment' });
+
     }
     try {
         res.status(200).json(subInvestment);

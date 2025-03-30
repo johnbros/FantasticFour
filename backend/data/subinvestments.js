@@ -36,10 +36,20 @@ const exportedMethods = {
         const insertInfo = await subInvestmentCollection.insertOne(newSubInvestment);
         if (insertInfo.insertedCount === 0) throw "Could not add sub-investment";
 
-        const updatedInvestment = await investmentsCollection.updateOne(
-            { _id: new ObjectId(investmentId) },
-            { $addToSet: { subInvestments: insertInfo.insertedId } },
-        );
+        const x = await investment.getInvestmentById(investmentId);
+        if (!x) throw "Investment not found";
+        console.log(x);
+        const newPrice = x.value + value;
+
+        const updatedInvestment = await investmentsCollection.findOneAndUpdate(
+  { _id: new ObjectId(investmentId) },
+  {
+    $addToSet: { subInvestments: insertInfo.insertedId },
+    $set: { value: newPrice }
+  },
+  { returnDocument: "after" }
+);
+
         if (!updatedInvestment) throw "Could not update investment with sub-investment";
 
         return await this.getSubInvestmentById(insertInfo.insertedId.toString());
@@ -47,6 +57,16 @@ const exportedMethods = {
 
     async removeSubInvestment(id) {
         const subInvestmentCollection = await subInvestments();
+        const subInvestment = await this.getSubInvestmentById(id);
+        const {investmentId} = subInvestment;
+        const investmentsCollection = await investments();
+
+        const updatedInvestment = await investmentsCollection.updateOne(
+            { _id: new ObjectId(investmentId) },
+            { $pull: { subInvestments: new ObjectId(id) } },
+        );
+        if (!updatedInvestment) throw "Could not update investment with sub-investment";
+
         const deletionInfo = await subInvestmentCollection.findOneAndDelete({
             _id: new ObjectId(id),
           });
