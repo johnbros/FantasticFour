@@ -8,6 +8,11 @@ const Navbar = (props) => {
         return (
             <nav className="navbar">
                 <Link to="/dashboard" className="nav-logo">
+                    <img 
+                        src="/duck_monical.png" 
+                        alt="Duck Finance Logo" 
+                        className="nav-logo-img"
+                    />
                     Duck Finance
                 </Link>
                 <div className="nav-links">
@@ -22,6 +27,11 @@ const Navbar = (props) => {
         return (
             <nav className="navbar">
                 <Link to="/" className="nav-logo">
+                    <img 
+                        src="/duck_monical.png" 
+                        alt="Duck Finance Logo" 
+                        className="nav-logo-img"
+                    />
                     Duck Finance
                 </Link>
                 <div className="nav-links">

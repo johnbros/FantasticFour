@@ -21,7 +21,14 @@ const Home = () => {
                 <div className="duck duck-4"></div>
                 
                 <div className={`hero-content ${isVisible ? 'visible' : ''}`}>
-                    <h1 className="hero-title">Welcome to Duck Finance</h1>
+                    <div className="title-container">
+                        <img 
+                            src="/duck_monical.png" 
+                            alt="Duck Finance Logo" 
+                            className="hero-logo"
+                        />
+                        <h1 className="hero-title">Welcome to Duck Finance</h1>
+                    </div>
                     <p className="hero-subtitle">
                         Your one-stop destination for all things duck-related
                     </p>

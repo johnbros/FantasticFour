@@ -7,7 +7,9 @@ import { fetchInvestment } from '../services/investmentServices';
 
 const fetchUserInvestments = async () => {
   let userId = await getId(); // Fetch user data from your API
+  console.log('User ID:', userId);
   let user = await fetchUser(userId)
+  console.log('User:', user);
     if (!user.userFinancialId) {
         window.location.href = '/setup-financial-plan';
         return [];

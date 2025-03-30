@@ -6,6 +6,11 @@ const NotFoundPage = () => {
     return (
         <div className="not-found-container">
             <div className="not-found-content">
+                <img 
+                    src="/duck.png" 
+                    alt="Funny Duck" 
+                    className="not-found-duck"
+                />
                 <h1 className="not-found-title">404</h1>
                 <h2 className="not-found-subtitle">Page Not Found</h2>
                 <p className="not-found-text">
