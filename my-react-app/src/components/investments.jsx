@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchInvestment } from '../services/investmentServices';
+import { fetchInvestment, addSubInvestment } from '../services/investmentServices';
 
 function InvestmentDetails() {
   const { id } = useParams(); // Get investment ID from URL
@@ -43,11 +43,16 @@ function InvestmentDetails() {
   const handleAddSubInvestment = async (newSubInvestment) => {
     setIsSaving(true);
     try {
-      // Call your API to add a sub-investment
-      // const addedSubInvestment = await addSubInvestmentAPI(id, newSubInvestment);
+      // Extract name and value from the form data
+      const { name, value } = newSubInvestment;
       
-      // Update state
-      // setSubInvestments(prev => [...prev, addedSubInvestment]);
+      // Call the addSubInvestment API function with the investment ID and form data
+      const addedSubInvestment = await addSubInvestment(id, name, parseFloat(value));
+      
+      // Update the state with the new sub-investment
+      setSubInvestments(prev => [...prev, addedSubInvestment]);
+      
+      // Close the add form
       setIsAdding(false);
     } catch (err) {
       console.error("Failed to add sub-investment:", err);

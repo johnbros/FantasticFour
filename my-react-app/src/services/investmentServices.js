@@ -44,3 +44,23 @@ export const deleteInvestment = async (investmentId) => {
         throw error;
     }
 }
+
+export const addSubInvestment = async (investmentId, name, value) => {
+    try {
+        // Match the actual route format in your backend
+        const response = await axios.post(
+            `${apiUrl}/api/investments/subInvestment/${investmentId}`, 
+            { name, value }, 
+            { 
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                    'Content-Type': 'application/json'
+                },
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(`Error adding sub-investment to investment ${investmentId}:`, error);
+        throw error;
+    }
+}

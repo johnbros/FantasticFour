@@ -4,6 +4,7 @@ import { checkAuth } from '../middleware/auth.middleware.js';
 import investments from '../data/investments.js';
 import validation from '../validation.js';
 import userData from '../data/users.js';
+import subInvestments from '../data/subInvestments.js';
 
 const router = express.Router();
 
@@ -103,6 +104,33 @@ router.delete('/:id', checkAuth, async (req, res) => {
     try {
         await investments.removeInvestment(id);
         res.status(200).json({ deletedCount: 1 });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+}
+);
+
+router.post('/subInvestment/:investmentId', checkAuth, async (req, res) => {
+    let { investmentId } = req.params;
+    console.log(investmentId);
+    let { name, value } = req.body;
+    let subInvestment = null;
+
+    if (!investmentId) {
+        return res.status(400).json({ error: 'Investment ID is required' });
+    }
+    try {
+        investmentId = validation.checkId(investmentId, "Investment Id");
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
+    }
+    try {
+        subInvestment = await subInvestments.addSubInvestment(investmentId,name, value);
+        if (!subInvestment) {
+            return res.status(500).json({ error: 'Error inserting sub-investment id' });
+        }
+        res.status(200).json(subInvestment);
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: error.message });

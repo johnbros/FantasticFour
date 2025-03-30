@@ -1,31 +1,32 @@
 import { ObjectId } from "mongodb";
 import { subInvestments, investments } from "../config/mongoCollections.js";
 import validation from "../validation.js";
+import investment from "./investments.js";
 
 const exportedMethods = {
     async getSubInvestmentById(id) {
         id = validation.checkId(id);
         const subInvestmentCollection = await subInvestments();
-        const subInvestment = await subInvestmentCollection.findOne({ _id: ObjectId(id) });
+        const subInvestment = await subInvestmentCollection.findOne({ _id: new ObjectId(id) });
         if (!subInvestment) throw "Sub investment not found";
         return subInvestment;
     },
 
     // Add a sub investment
     async addSubInvestment(investmentId, name, value) {
-        investmentId = validation.checkId(investmentId, "subInvestment Id");
+        investmentId = validation.checkId(investmentId, "Investment Id");
         name = validation.checkString(name, "Subinvestment name");
         value = validation.checkNum(value, "Subinvestment value");
 
         const subInvestmentCollection = await subInvestments();
-        const investmentCollection = await investments();
-        const investmentsInfo = await investmentCollection.getInvestmentById(investmentId);
+        const investmentsCollection = await investments();
+        const investmentsInfo = await investment.getInvestmentById(investmentId);
         if (!investmentsInfo) throw "Investment not found";
-        const investmentPercentage = (totalValue / (investmentsInfo.totalValue + totalValue)) * 100;
+        const investmentPercentage = (value / (investmentsInfo.value + value)) * 100;
         if (investmentPercentage > 100) throw "Investment percentage cannot exceed 100%";
 
         const newSubInvestment = {
-            investmentId: ObjectId(investmentId),
+            investmentId: new ObjectId(investmentId),
             name,
             value,
             investmentPercentage,
@@ -35,7 +36,7 @@ const exportedMethods = {
         const insertInfo = await subInvestmentCollection.insertOne(newSubInvestment);
         if (insertInfo.insertedCount === 0) throw "Could not add sub-investment";
 
-        const updatedInvestment = await investmentCollection.updateOne(
+        const updatedInvestment = await investmentsCollection.updateOne(
             { _id: new ObjectId(investmentId) },
             { $addToSet: { subInvestments: insertInfo.insertedId } },
         );
